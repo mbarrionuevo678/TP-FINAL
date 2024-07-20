@@ -1,34 +1,31 @@
 output "vpc_id" {
-  description = "The ID of the VPC"
-  value       = module.vpc.vpc_id
+  value = module.vpc.vpc_id
 }
 
-output "public_subnets" {
-  description = "The IDs of the public subnets"
-  value       = module.vpc.public_subnets
+output "subnets" {
+  value = module.vpc.public_subnets
 }
 
-output "private_subnets" {
-  description = "The IDs of the private subnets"
-  value       = module.vpc.private_subnets
+output "cluster_id" {
+  value = aws_eks_cluster.eks.id
 }
 
-output "eks_cluster_id" {
-  description = "The ID of the EKS cluster"
-  value       = module.eks.cluster_id
+output "cluster_endpoint" {
+  value = aws_eks_cluster.eks.endpoint
 }
 
-output "eks_cluster_endpoint" {
-  description = "The endpoint of the EKS cluster"
-  value       = module.eks.cluster_endpoint
+output "cluster_security_group_id" {
+  value = aws_eks_cluster.eks.vpc_config[0].cluster_security_group_id
 }
 
-output "eks_cluster_security_group_id" {
-  description = "The security group ID of the EKS cluster"
-  value       = module.eks.cluster_security_group_id
+output "node_security_group_id" {
+  value = aws_eks_node_group.eks_nodes.resources[0].autoscaling_groups[0].security_group_ids[0]
 }
 
-output "eks_node_security_group_id" {
-  description = "The security group ID of the EKS node group"
-  value       = module.eks.node_security_group_id
+output "prometheus_volume_id" {
+  value = aws_ebs_volume.prometheus_volume.id
+}
+
+output "grafana_volume_id" {
+  value = aws_ebs_volume.grafana_volume.id
 }

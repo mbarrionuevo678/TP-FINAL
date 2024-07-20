@@ -1,21 +1,11 @@
 {
     "Version": "2012-10-17",
     "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "ec2:*",
-                "iam:*",
-                "eks:*",
-                "cloudformation:*",
-                "autoscaling:*",
-                "elasticloadbalancing:*",
-                "cloudwatch:*",
-                "s3:*",
-                "logs:*",
-                "route53:*"
-            ],
-            "Resource": "*"
-        }
+      {
+        "Action": "sts:AssumeRole",
+        "Effect": "Allow",
+        "Resource": "*"
+      }
     ]
-}
+  }
+  

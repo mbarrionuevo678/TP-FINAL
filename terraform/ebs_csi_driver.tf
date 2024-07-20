@@ -2,7 +2,7 @@ resource "kubernetes_storage_class" "ebs_sc" {
   metadata {
     name = "ebs-sc"
   }
-  provisioner          = "ebs.csi.aws.com"
+  storage_provisioner = "ebs.csi.aws.com"
   parameters = {
     type   = "gp2"
     fsType = "ext4"
