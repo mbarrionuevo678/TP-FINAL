@@ -51,6 +51,16 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl jq
+          curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/v0.118.0/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp
+          sudo mv /tmp/eksctl /usr/local/bin
+          curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          sudo mv ./kubectl /usr/local/bin/kubectl
+
       - name: Set up EKS cluster
         run: |
           chmod +x configure_ebs.sh create_ec2.sh create_eks.sh deploy_monitoring.sh deploy_nginx.sh deploy_project.sh install_ebs_csi.sh
