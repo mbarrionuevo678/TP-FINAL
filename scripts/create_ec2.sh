@@ -9,11 +9,11 @@ INSTANCE_ID=$(aws ec2 describe-instances \
 if [ -n "$INSTANCE_ID" ]; then
   echo "EC2 instance already exists with ID: $INSTANCE_ID"
 else
-  # Crear instancia EC2
+  # Crear instancia EC2 con una AMI de Ubuntu Free Tier y tipo de instancia t3.small
   aws ec2 run-instances \
-      --image-id ami-0c55b159cbfafe1f0 \
+      --image-id ami-0ac80df6eff0e70b5 \
       --count 1 \
-      --instance-type t2.micro \
+      --instance-type t3.small \
       --key-name pin \
       --security-group-ids sg-12345678 \
       --subnet-id subnet-12345678 \
