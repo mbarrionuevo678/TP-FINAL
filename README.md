@@ -1,4 +1,4 @@
-# Grupo 7 DevOps: Kubernetes Deployment con Terraform y GitHub Actions
+# DevOps Project: Kubernetes Deployment with Terraform and GitHub Actions
 
 ## Descripción del Proyecto
 
@@ -18,9 +18,10 @@ project-root/
 │ ├── security_groups.tf
 │ ├── eks_cluster.tf
 │ ├── ebs_csi_driver.tf
-│ ├── iam.tf
+│ ├── iam_roles.tf
 │ ├── iam_instance_profile.tf
 │ ├── ec2.tf
+│ ├── ebs_volumes.tf
 │ ├── terraform-policy.json
 │ ├── ec2_user_data.sh
 ├── k8s/
@@ -38,6 +39,7 @@ project-root/
 └── docker/
 └── geminis-tributario-portal-develop/
 └── docker-compose.yml
+
 
 ## Configuración y Despliegue
 
@@ -83,9 +85,10 @@ outputs.tf: Define las salidas de los scripts de Terraform.
 security_groups.tf: Configura los grupos de seguridad.
 eks_cluster.tf: Configura el clúster EKS.
 ebs_csi_driver.tf: Configura el controlador CSI de EBS.
-iam.tf: Configura los roles IAM necesarios.
+iam_roles.tf: Configura los roles IAM necesarios.
 iam_instance_profile.tf: Configura el perfil de instancia IAM.
 ec2.tf: Configura la instancia EC2.
+ebs_volumes.tf: Crea los volúmenes EBS necesarios.
 terraform-policy.json: Define la política IAM para Terraform.
 Kubernetes
 prometheus/: Contiene los archivos de configuración de Prometheus.
@@ -111,7 +114,6 @@ Ejecutar Docker Compose para desplegar la aplicación.
 Instalar kubectl.
 Crear volúmenes persistentes y claims en Kubernetes.
 Desplegar Prometheus, Grafana y Nginx en el clúster EKS.
-
 Ejemplo de Pipeline para Desplegar
 
 name: Deploy to AWS and Run Docker Compose
@@ -119,7 +121,6 @@ name: Deploy to AWS and Run Docker Compose
 # Permitir ejecución manual
 on:
   workflow_dispatch:
-  # Comentado para futuras ejecuciones automáticas en push o pull request a main
   # push:
   #   branches:
   #     - main
@@ -237,8 +238,3 @@ jobs:
     - name: 🗑️ Destroy Terraform-managed infrastructure
       working-directory: ./terraform
       run: terraform destroy -auto-approve
-
-Notas Finales
-Asegúrate de reemplazar <YOUR_EBS_VOLUME_ID> en los archivos de configuración de volúmenes persistentes con los IDs de tus volúmenes EBS.
-Verifica que los permisos de IAM estén correctamente configurados para permitir la creación y gestión de los recursos necesarios.
-Utiliza la pestaña "Actions" en GitHub para monitorear y revisar la ejecución de tus pipelines.

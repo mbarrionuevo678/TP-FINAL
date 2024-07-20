@@ -5,11 +5,11 @@ metadata:
 spec:
   capacity:
     storage: 10Gi
+  volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: ebs-sc
-  csi:
-    driver: ebs.csi.aws.com
-    volumeHandle: <YOUR_EBS_VOLUME_ID>  # Reemplaza con tu ID de volumen EBS
+  storageClassName: ""
+  awsElasticBlockStore:
+    volumeID: "${grafana_volume_id}"  # Referencia a la variable de Terraform
     fsType: ext4

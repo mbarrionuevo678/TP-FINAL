@@ -1,9 +1,7 @@
 name: Deploy to AWS and Run Docker Compose
 
-# Permitir ejecución manual
 on:
   workflow_dispatch:
-  # Comentado para futuras ejecuciones automáticas en push o pull request a main
   # push:
   #   branches:
   #     - main
