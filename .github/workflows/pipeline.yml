@@ -23,7 +23,7 @@ jobs:
       - name: Set up EC2 instance
         run: |
           ls -l # Añadir esta línea para listar los archivos en el directorio actual
-          chmod +x create_ec2.sh
+          chmod +x configure_ebs.sh create_ec2.sh create_eks.sh deploy_monitoring.sh deploy_nginx.sh deploy_project.sh install_ebs_csi.sh
           ./create_ec2.sh
 
   deploy:
@@ -43,27 +43,27 @@ jobs:
 
       - name: Set up EKS cluster
         run: |
-          chmod +x create_eks.sh
+          chmod +x configure_ebs.sh create_ec2.sh create_eks.sh deploy_monitoring.sh deploy_nginx.sh deploy_project.sh install_ebs_csi.sh
           ./create_eks.sh
 
       - name: Deploy NGINX
         run: |
-          chmod +x deploy_nginx.sh
+          chmod +x configure_ebs.sh create_ec2.sh create_eks.sh deploy_monitoring.sh deploy_nginx.sh deploy_project.sh install_ebs_csi.sh
           ./deploy_nginx.sh
 
       - name: Install EBS CSI driver
         run: |
-          chmod +x install_ebs_csi.sh
+          chmod +x configure_ebs.sh create_ec2.sh create_eks.sh deploy_monitoring.sh deploy_nginx.sh deploy_project.sh install_ebs_csi.sh
           ./install_ebs_csi.sh
 
       - name: Configure EBS
         run: |
-          chmod +x configure_ebs.sh
+          chmod +x configure_ebs.sh create_ec2.sh create_eks.sh deploy_monitoring.sh deploy_nginx.sh deploy_project.sh install_ebs_csi.sh
           ./configure_ebs.sh
 
       - name: Deploy project
         run: |
-          chmod +x deploy_project.sh
+          chmod +x configure_ebs.sh create_ec2.sh create_eks.sh deploy_monitoring.sh deploy_nginx.sh deploy_project.sh install_ebs_csi.sh
           ./deploy_project.sh
 
   monitor:
@@ -83,5 +83,5 @@ jobs:
 
       - name: Deploy monitoring
         run: |
-          chmod +x deploy_monitoring.sh
+          chmod +x configure_ebs.sh create_ec2.sh create_eks.sh deploy_monitoring.sh deploy_nginx.sh deploy_project.sh install_ebs_csi.sh
           ./deploy_monitoring.sh
