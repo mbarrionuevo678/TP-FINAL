@@ -22,6 +22,10 @@ jobs:
 
       - name: Set up EC2 instance
         run: |
+          sudo apt-get update
+          sudo apt-get install -y curl
+          curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/v0.118.0/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp
+          sudo mv /tmp/eksctl /usr/local/bin
           ls -l
           chmod +x configure_ebs.sh create_ec2.sh create_eks.sh deploy_monitoring.sh deploy_nginx.sh deploy_project.sh install_ebs_csi.sh
           ./create_ec2.sh
@@ -40,6 +44,13 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
+
+      - name: Install eksctl
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl
+          curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/v0.118.0/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp
+          sudo mv /tmp/eksctl /usr/local/bin
 
       - name: Set up EKS cluster
         run: |
