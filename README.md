@@ -1,77 +1,62 @@
 # Proyecto Integrador DevOps
 
-## Introducción
-Este proyecto tiene como objetivo principal el aprendizaje de diversas tecnologías y la implementación práctica mediante un laboratorio que integra diferentes herramientas y tecnologías. El enfoque principal es la creación de una instancia EC2 en AWS y la configuración de un clúster EKS con monitoreo utilizando Prometheus y Grafana.
+## Descripción
+
+Este proyecto tiene como objetivo principal el despliegue de un clúster EKS en AWS, la configuración de un servidor NGINX, y la integración de herramientas de monitoreo como Prometheus y Grafana.
 
 ## Estructura del Proyecto
-- **.github/workflows/pipeline.yml**: Definición del pipeline de CI/CD.
-- **create_ec2.sh**: Script para crear la instancia EC2.
-- **create_eks.sh**: Script para crear el clúster EKS.
-- **deploy_nginx.sh**: Script para desplegar un pod de NGINX en EKS.
-- **deploy_project.sh**: Script para desplegar el proyecto.
-- **install_ebs_csi.sh**: Script para instalar el driver EBS CSI.
-- **deploy_monitoring.sh**: Script para desplegar Prometheus y Grafana.
-- **configure_ebs.sh**: Script para configurar EBS.
 
-## Pasos para Configuración
+- `.github/workflows/pipeline.yml`: Archivo de configuración del pipeline de GitHub Actions.
+- `create_ec2.sh`: Script para crear una instancia EC2.
+- `create_eks.sh`: Script para crear un clúster EKS.
+- `deploy_nginx.sh`: Script para desplegar NGINX en el clúster EKS.
+- `install_ebs_csi.sh`: Script para instalar el controlador CSI de EBS.
+- `configure_ebs.sh`: Script para configurar EBS con IAM roles y políticas.
+- `deploy_monitoring.sh`: Script para desplegar Prometheus y Grafana.
+- `deploy_project.sh`: Script para desplegar el proyecto específico.
+- `ebs-csi-driver-trust-policy.json`: Archivo de política de confianza para el controlador CSI de EBS.
 
-### 1. Crear Instancia EC2
-La creación de la instancia EC2 se realiza mediante el script `create_ec2.sh`. Este script configura una instancia en AWS con Ubuntu Server 22.04 y todos los paquetes necesarios:
-```sh
-chmod +x create_ec2.sh
+## Requisitos
+
+- Cuenta de AWS con permisos necesarios para crear recursos (EC2, EKS, IAM, etc).
+- Claves de acceso y secreto de AWS configuradas en GitHub Actions como secretos (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`).
+- `eksctl` y `kubectl` instalados.
+
+## Configuración del Pipeline
+
+El pipeline de GitHub Actions está configurado para ejecutar los siguientes trabajos:
+
+1. **Setup**: Configura las credenciales de AWS, instala las dependencias necesarias y crea la instancia EC2.
+2. **Deploy**: Configura el clúster EKS, despliega NGINX, instala el controlador CSI de EBS, configura EBS y despliega el proyecto.
+3. **Monitor**: Despliega las herramientas de monitoreo (Prometheus y Grafana).
+
+## Ejecución Manual de Scripts
+
+Si prefieres ejecutar los scripts manualmente, sigue los siguientes pasos:
+
+1. Clonar el repositorio:
+
+```bash
+git clone https://github.com/mbarrionuevo678/PIN-FINAL.git
+cd PIN-FINAL
+
+Hacer ejecutables los scripts:
+chmod +x configure_ebs.sh create_ec2.sh create_eks.sh deploy_monitoring.sh deploy_nginx.sh deploy_project.sh install_ebs_csi.sh
+
+Ejecutar los scripts en el orden necesario:
 ./create_ec2.sh
-
-2. Crear Clúster EKS
-El clúster EKS se crea usando el script create_eks.sh. Este script configura el clúster y habilita el acceso SSH y las zonas especificadas:
-
-chmod +x create_eks.sh
 ./create_eks.sh
-
-3. Desplegar NGINX
-Para desplegar un pod de NGINX en el clúster EKS:
-
-chmod +x deploy_nginx.sh
 ./deploy_nginx.sh
-
-4. Desplegar Proyecto
-El proyecto se despliega utilizando el script deploy_project.sh, que clona el repositorio y configura todos los componentes necesarios:
-
-chmod +x deploy_project.sh
-./deploy_project.sh
-
-5. Instalar EBS CSI Driver
-Para instalar el driver EBS CSI en el clúster EKS:
-
-chmod +x install_ebs_csi.sh
 ./install_ebs_csi.sh
-
-6. Configurar EBS
-Para configurar EBS, ejecuta el script:
-
-chmod +x configure_ebs.sh
 ./configure_ebs.sh
-
-7. Desplegar Monitoreo
-Para desplegar Prometheus y Grafana para el monitoreo del clúster:
-
-sh
-
-
-chmod +x deploy_monitoring.sh
+./deploy_project.sh
 ./deploy_monitoring.sh
 
+Limpieza de Recursos
+Para eliminar los recursos creados, puedes usar los siguientes comandos:
+eksctl delete cluster --name=eks-mundos-e --region=us-east-1
+aws ec2 terminate-instances --instance-ids <INSTANCE_ID>
 
-Limpiar Recursos
-Para desinstalar los recursos de Prometheus y Grafana:
+Sustituye <INSTANCE_ID> con el ID de la instancia EC2 que deseas eliminar.
 
-helm uninstall prometheus --namespace prometheus
-kubectl delete ns prometheus
-
-helm uninstall grafana --namespace grafana
-kubectl delete ns grafana
-rm -rf ${HOME}/environment/grafana
-
-
-Para eliminar el clúster EKS:
-
-eksctl delete cluster --name eks-mundos-e
+Con estas modificaciones y ajustes, tu proyecto debería estar configurado para que los recursos no se dupliquen y se manejen adecuadamente en el pipeline de GitHub Actions.
