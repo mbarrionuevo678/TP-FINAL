@@ -54,8 +54,8 @@ jobs:
 
       - name: Deploy Web App 🌐
         run: |
-          ./scripts/deploy_project.sh
+          ./scripts/deploy_apps.sh
 
-      - name: Deploy monitoring 📊
+      - name: Deploy Prometheus and Grafana 📊
         run: |
           ./scripts/prometheus-grafana-deployment.sh

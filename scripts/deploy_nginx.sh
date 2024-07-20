@@ -1,14 +1,10 @@
 #!/bin/bash
 
-# Verificar si el deployment y servicio de NGINX ya existen
-if kubectl get deployment nginx &>/dev/null; then
-    echo "Deployment nginx already exists."
+# Verificar si el servicio nginx ya está desplegado
+if kubectl get services | grep -q "nginx"; then
+  echo "NGINX service already exists."
 else
-    kubectl apply -f ../manifests/nginx-deployment.yaml
-fi
-
-if kubectl get service nginx &>/dev/null; then
-    echo "Service nginx already exists."
-else
-    kubectl apply -f ../manifests/nginx-service.yaml
+  # Desplegar NGINX en el clúster EKS
+  kubectl apply -f manifests/nginx-deployment.yaml
+  kubectl apply -f manifests/nginx-service.yaml
 fi

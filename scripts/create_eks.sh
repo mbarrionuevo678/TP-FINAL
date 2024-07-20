@@ -1,15 +1,12 @@
 #!/bin/bash
 
+# Variables
 CLUSTER_NAME="eks-mundos-e"
+REGION="us-east-1"
 
-# Verificar si el cluster ya existe
-if eksctl get cluster --name=${CLUSTER_NAME} --region=us-east-1; then
-    echo "Cluster ${CLUSTER_NAME} already exists."
-else
-    # Crear cluster EKS
-    eksctl create cluster \
-    --name ${CLUSTER_NAME} \
-    --region us-east-1 \
+eksctl create cluster \
+    --name $CLUSTER_NAME \
+    --region $REGION \
     --node-type t3.small \
     --nodes 3 \
     --with-oidc \
@@ -17,5 +14,4 @@ else
     --ssh-public-key pin \
     --managed \
     --full-ecr-access \
-    --zones us-east-1a, us-east-1b, us-east-1c
-fi
+    --zones us-east-1a,us-east-1b,us-east-1c
