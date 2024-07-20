@@ -9,7 +9,8 @@ Este proyecto integra varias herramientas y tecnologías de DevOps para crear un
 project-root/
 ├── .github/
 │ └── workflows/
-│ └── deploy.yml
+│ ├── deploy.yml
+│ └── destroy.yml
 ├── terraform/
 │ ├── main.tf
 │ ├── variables.tf
@@ -34,11 +35,9 @@ project-root/
 │ └── nginx/
 │ ├── nginx-deployment.yaml
 │ ├── nginx-service.yaml
-├── docker/
-│ └── geminis-tributario-portal-develop/
-│ └── docker-compose.yml
-└── README.md
-
+└── docker/
+└── geminis-tributario-portal-develop/
+└── docker-compose.yml
 
 ## Configuración y Despliegue
 
@@ -113,7 +112,133 @@ Instalar kubectl.
 Crear volúmenes persistentes y claims en Kubernetes.
 Desplegar Prometheus, Grafana y Nginx en el clúster EKS.
 
+Ejemplo de Pipeline para Desplegar
+
+name: Deploy to AWS and Run Docker Compose
+
+# Permitir ejecución manual
+on:
+  workflow_dispatch:
+  # Comentado para futuras ejecuciones automáticas en push o pull request a main
+  # push:
+  #   branches:
+  #     - main
+  # pull_request:
+  #   branches:
+  #     - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 🎉 Checkout code
+      uses: actions/checkout@v2
+
+    - name: 🚀 Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.0.0
+
+    - name: 🔑 Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: 🛠 Initialize Terraform
+      working-directory: ./terraform
+      run: terraform init
+
+    - name: 📦 Apply Terraform
+      working-directory: ./terraform
+      run: terraform apply -auto-approve
+
+    - name: 🐋 Install Docker
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker.io
+        sudo systemctl start docker
+        sudo systemctl enable docker
+        sudo usermod -aG docker $USER
+
+    - name: 🐳 Install Docker Compose
+      run: |
+        sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+        docker-compose --version
+
+    - name: 🏗 Run Docker Compose
+      working-directory: ./docker/geminis-tributario-portal-develop
+      run: docker-compose up -d
+
+    - name: ⚙️ Install kubectl
+      run: |
+        curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+        chmod +x ./kubectl
+        sudo mv ./kubectl /usr/local/bin/kubectl
+
+    - name: 📁 Create Persistent Volumes and Claims
+      run: |
+        kubectl apply -f ./k8s/prometheus/prometheus-pv.yaml
+        kubectl apply -f ./k8s/prometheus/prometheus-pvc.yaml
+        kubectl apply -f ./k8s/grafana/grafana-pv.yaml
+        kubectl apply -f ./k8s/grafana/grafana-pvc.yaml
+
+    - name: 📈 Deploy Prometheus
+      working-directory: ./k8s/prometheus
+      run: kubectl apply -f prometheus-deployment.yaml
+
+    - name: 📊 Deploy Grafana
+      working-directory: ./k8s/grafana
+      run: kubectl apply -f grafana-deployment.yaml
+
+    - name: 🌐 Deploy Nginx
+      working-directory: ./k8s/nginx
+      run: kubectl apply -f nginx-deployment.yaml
+
+Pipeline de GitHub Actions para Destruir la Infraestructura
+El pipeline en .github/workflows/destroy.yml incluye pasos para:
+
+Configurar Terraform.
+Destruir la infraestructura creada por Terraform.
+Ejemplo de Pipeline para Destruir
+
+name: Destroy AWS Infrastructure
+
+on:
+  workflow_dispatch:
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 🎉 Checkout code
+      uses: actions/checkout@v2
+
+    - name: 🚀 Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.0.0
+
+    - name: 🔑 Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: 🛠 Initialize Terraform
+      working-directory: ./terraform
+      run: terraform init
+
+    - name: 🗑️ Destroy Terraform-managed infrastructure
+      working-directory: ./terraform
+      run: terraform destroy -auto-approve
+
 Notas Finales
 Asegúrate de reemplazar <YOUR_EBS_VOLUME_ID> en los archivos de configuración de volúmenes persistentes con los IDs de tus volúmenes EBS.
 Verifica que los permisos de IAM estén correctamente configurados para permitir la creación y gestión de los recursos necesarios.
-Utiliza la pestaña "Actions" en GitHub para monitorear y revisar la ejecución de tu pipeline.
+Utiliza la pestaña "Actions" en GitHub para monitorear y revisar la ejecución de tus pipelines.
