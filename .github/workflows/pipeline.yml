@@ -1,6 +1,9 @@
 name: CI/CD Pipeline
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   setup:
@@ -16,9 +19,9 @@ jobs:
           aws-region: us-east-1
       - name: Crear EC2
         run: |
-          chmod +x ./create_ec2.sh
+          chmod +x create_ec2.sh
           ./create_ec2.sh
-
+          
   deploy:
     runs-on: ubuntu-latest
     needs: setup
@@ -33,13 +36,13 @@ jobs:
           aws-region: us-east-1
       - name: Crear EKS
         run: |
-          chmod +x ./create_eks.sh
+          chmod +x create_eks.sh
           ./create_eks.sh
       - name: Desplegar NGINX
         run: |
-          chmod +x ./deploy_nginx.sh
+          chmod +x deploy_nginx.sh
           ./deploy_nginx.sh
       - name: Desplegar Proyecto
         run: |
-          chmod +x ./deploy_project.sh
+          chmod +x deploy_project.sh
           ./deploy_project.sh
