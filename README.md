@@ -1,4 +1,4 @@
-# DevOps Project: Kubernetes Deployment with Terraform and GitHub Actions
+# Grupo 7 DevOps: Kubernetes Deployment con Terraform y GitHub Actions
 
 ## Descripción del Proyecto
 
