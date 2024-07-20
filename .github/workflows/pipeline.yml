@@ -1,111 +1,59 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline 🚀
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch: # Para ejecución manual
 
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
-      - name: Install Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y curl jq
-          curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/v0.118.0/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp
-          sudo mv /tmp/eksctl /usr/local/bin
-          curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
-          chmod +x ./kubectl
-          sudo mv ./kubectl /usr/local/bin/kubectl
-
-      - name: Set up EC2 instance
-        run: |
-          ls -l
-          chmod +x configure_ebs.sh create_ec2.sh create_eks.sh deploy_monitoring.sh deploy_nginx.sh deploy_project.sh install_ebs_csi.sh
-          ./create_ec2.sh
-
   deploy:
     runs-on: ubuntu-latest
-    needs: setup
 
     steps:
-      - name: Checkout code
+      - name: Checkout code 📥
         uses: actions/checkout@v2
 
-      - name: Configure AWS credentials
+      - name: Configure AWS credentials 🔐
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Install Dependencies
+      - name: Install eksctl 🛠️
         run: |
           sudo apt-get update
-          sudo apt-get install -y curl jq
-          curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/v0.118.0/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp
+          sudo apt-get install -y jq
+          curl -s --location "https://github.com/weaveworks/eksctl/releases/download/0.118.0/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
           sudo mv /tmp/eksctl /usr/local/bin
-          curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
-          chmod +x ./kubectl
-          sudo mv ./kubectl /usr/local/bin/kubectl
 
-      - name: Set up EKS cluster
+      - name: Create or Update EKS Cluster 🌐
         run: |
-          chmod +x configure_ebs.sh create_ec2.sh create_eks.sh deploy_monitoring.sh deploy_nginx.sh deploy_project.sh install_ebs_csi.sh
+          chmod +x scripts/configure_ebs.sh scripts/create_ec2.sh scripts/create_eks.sh scripts/deploy_monitoring.sh scripts/deploy_nginx.sh scripts/deploy_project.sh scripts/install_ebs_csi.sh scripts/deploy_apps.sh prometheus-grafana-deployment.sh
           if ! eksctl get cluster --name=eks-mundos-e --region=us-east-1; then
-            ./create_eks.sh
+            ./scripts/create_eks.sh
           else
             echo "Cluster eks-mundos-e already exists."
           fi
 
-      - name: Deploy NGINX
+      - name: Create or Update EC2 Instance 💻
         run: |
-          chmod +x configure_ebs.sh create_ec2.sh create_eks.sh deploy_monitoring.sh deploy_nginx.sh deploy_project.sh install_ebs_csi.sh
-          ./deploy_nginx.sh
+          ./scripts/create_ec2.sh
 
-      - name: Install EBS CSI driver
+      - name: Deploy NGINX 📦
         run: |
-          chmod +x configure_ebs.sh create_ec2.sh create_eks.sh deploy_monitoring.sh deploy_nginx.sh deploy_project.sh install_ebs_csi.sh
-          ./install_ebs_csi.sh
+          ./scripts/deploy_nginx.sh
 
-      - name: Configure EBS
+      - name: Install EBS CSI Driver 💾
         run: |
-          chmod +x configure_ebs.sh create_ec2.sh create_eks.sh deploy_monitoring.sh deploy_nginx.sh deploy_project.sh install_ebs_csi.sh
-          ./configure_ebs.sh
+          ./scripts/install_ebs_csi.sh
 
-      - name: Deploy project
+      - name: Configure EBS 🛠️
         run: |
-          chmod +x configure_ebs.sh create_ec2.sh create_eks.sh deploy_monitoring.sh deploy_nginx.sh deploy_project.sh install_ebs_csi.sh
-          ./deploy_project.sh
+          ./scripts/configure_ebs.sh
 
-  monitor:
-    runs-on: ubuntu-latest
-    needs: deploy
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
-      - name: Deploy monitoring
+      - name: Deploy Web App 🌐
         run: |
-          chmod +x configure_ebs.sh create_ec2.sh create_eks.sh deploy_monitoring.sh deploy_nginx.sh deploy_project.sh install_ebs_csi.sh
-          ./deploy_monitoring.sh
+          ./scripts/deploy_project.sh
+
+      - name: Deploy monitoring 📊
+        run: |
+          ./scripts/prometheus-grafana-deployment.sh
