@@ -15,8 +15,8 @@ else
       --count 1 \
       --instance-type t2.micro \
       --key-name pin \
-      --security-group-ids <YOUR-SECURITY-GROUP-ID> \
-      --subnet-id <YOUR-SUBNET-ID> \
+      --security-group-ids sg-12345678 \
+      --subnet-id subnet-12345678 \
       --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=PIN-EC2-Instance}]' \
       --user-data file://scripts/ec2_user_data.sh
 fi
