@@ -1,9 +1,6 @@
 #!/bin/bash
 
-# Variables
-SECURITY_GROUP_ID="tu-security-group-id"
-SUBNET_ID="tu-subnet-id"
-AMI_ID="ami-0ac80df6eff0e70b5"  # AMI de Ubuntu Free Tier
+source scripts/resource_ids.sh
 
 # Verificar si la instancia EC2 ya existe
 INSTANCE_ID=$(aws ec2 describe-instances \
@@ -16,12 +13,12 @@ if [ -n "$INSTANCE_ID" ]; then
 else
   # Crear instancia EC2
   aws ec2 run-instances \
-      --image-id $AMI_ID \
+      --image-id ami-0ac80df6eff0e70b5 \
       --count 1 \
       --instance-type t3.small \
       --key-name pin \
       --security-group-ids $SECURITY_GROUP_ID \
-      --subnet-id $SUBNET_ID \
+      --subnet-id $SUBNET1_ID \
       --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=PIN-EC2-Instance}]' \
       --user-data file://scripts/ec2_user_data.sh
 fi
