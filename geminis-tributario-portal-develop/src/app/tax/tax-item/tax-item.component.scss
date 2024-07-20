@@ -1,0 +1,137 @@
+// Tab Bar
+
+::ng-deep.mat-mdc-tab-group {
+    .penalties-tab{
+        &.mdc-tab--active {
+            .mdc-tab-indicator__content--underline {
+                border-color: var(--warning)!important
+            }
+            .mdc-tab__text-label {
+                color: var(--warning)!important
+            }
+        }
+        .mat-badge-content {
+            color: white;
+        }
+    }
+    .lawsuits-tab{
+        &.mdc-tab--active {
+            .mdc-tab-indicator__content--underline {
+                border-color: var(--danger)!important
+            }
+            .mdc-tab__text-label {
+                color: var(--danger)!important
+            }
+        }
+    }
+}
+
+
+
+
+.detail-card {
+    position: relative;
+
+    h3 {
+        font-family: 'Roboto';
+        font-size: 1.3em;
+        color: var(--dark);
+    }
+
+    .detail-card-inner {
+        background: var(--ultralight);
+        border: 1px solid var(--light);
+        border-left: 7px solid var(--primary);
+
+        &.plan-card {
+            border-left-color: var(--primary);
+        }
+
+        &.penalty-card {
+            border-left-color: var(--warning);
+        }
+
+        &.lawsuit-card {
+            border-left-color: var(--danger);
+        }
+
+        span.key {
+            color: var(--medium);
+            display: block;
+        }
+
+        span.value {
+            color: var(--superdark);
+            display: block;
+            font-size: .9em;
+        }
+    }
+
+}
+
+.responsive-table {
+    overflow-x: auto;
+}
+.expirated {
+    color: red;
+    font-weight: 500;
+}
+.expiration-badge {
+    background: red;
+    color: white;
+    border-radius: 50%;
+    padding: .3em .45em;
+    font-size: .9em;
+}
+
+// Responsive Adjustments
+
+@media screen and (min-width: 599px) {
+    .responsive-table {
+        overflow-x: visible;
+    }
+    .detail-card .detail-card-inner {
+        &::after {
+            content: '>';
+            font-size: 2em;
+            position: absolute;
+            right: 1em;
+            top: 40%;
+        }
+        &.plan-card {
+            &::after {
+                color: var(--primary);
+            }
+        }
+
+        &.penalty-card {
+            &::after {
+                content: ''
+            }
+        }
+
+        &.lawsuit-card {
+            &::after {
+                color: var(--danger);
+            }
+        }
+
+    }
+}
+
+// MDC Adjustments
+
+::ng-deep .mat-mdc-tab-body-content {
+    padding: 1em .5em;
+}
+::ng-deep .responsive-table .mdc-data-table__cell, .responsive-table .mdc-data-table__header-cell {
+    @media screen and (max-width: 599px) {
+        padding: 0 .5em 0 .5em;
+        .information-icon {
+            transform: scale(.8);
+            width: 25px;
+            vertical-align: middle;
+            padding: 0;
+        }
+    }
+}

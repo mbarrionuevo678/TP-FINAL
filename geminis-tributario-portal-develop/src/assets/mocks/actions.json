@@ -1,0 +1,237 @@
+{
+  "status": {
+    "messages": [],
+    "success": true
+  },
+  "data": [
+    {
+      "name": "Tributos",
+      "data": [
+        {
+          "name": "Inmuebles",
+          "path": "/tax/search/inmueble",
+          "section": "taxes",
+          "featured": true,
+          "featuredExtras": {
+            "title": "Impuesto Inmobiliario",
+            "icon": "home_work",
+            "description": "Pagá tu impuesto inmobiliario online estés donde estés"
+          },
+          "permissions": ["private","public"],
+          "order":1
+        },
+        {
+          "name": "Automotores",
+          "path": "/tax/search/automotor",
+          "section": "taxes",
+          "featured": true,
+          "featuredExtras": {
+            "title": "Impuesto Automotor",
+            "icon": "directions_car",
+            "description":  "Pagá tu impuesto automotor online estés donde estés"
+          },
+          "permissions": ["private","public"],
+          "order":2
+        },
+        {
+          "name": "Comercios",
+          "path": "/tax/search/comercio",
+          "section": "taxes",
+          "featured": true,
+          "featuredExtras": {
+            "title": "Comercio e Industria",
+            "icon": "shopping_cart",
+            "description": "Pagá el impuesto de tu comercio online estés donde estés"
+          },
+          "permissions": ["private","public"],
+          "order":3
+        },
+        {
+          "name": "Cementerios",
+          "path": "/tax/search/cementerio",
+          "section": "taxes",
+          "permissions": ["private","public"],
+          "order":4
+        }
+      ]
+    },
+    {
+      "name": "Varios",
+      "data": [
+        {
+          "name": "Bienes por Cuit",
+          "path": "/current-site",
+          "section": "other",
+          "params": { "fragment": "/objeto/persona/imponiblesasociados" },
+          "permissions": ["private"],
+          "order":1
+        },
+        {
+          "name": "Planes de Pago",
+          "path": "/current-site",
+          "section": "other",
+          "params": { "fragment": "/ctacte/plan/consultaplan" },
+          "permissions": ["private","public"],
+          "order":2
+        },
+        {
+          "name": "Tasas administrativas",
+          "path": "/current-site",
+          "section": "other",
+          "params": { "fragment": "/ctacte/tasasadmin/index" },
+          "permissions": ["private","public"],
+          "order":3
+        },
+        {
+          "name": "Multas",
+          "path": "/current-site",
+          "section": "other",
+          "params": { "fragment": "/objeto/objeto/index&to=11" },
+          "permissions": ["private","public"],
+          "order":4
+        },
+        {
+          "name": "Trámites",
+          "path": "/current-site",
+          "section": "other",
+          "params": { "fragment": "/ctacte/tasasadmin/tramites" },
+          "permissions": ["private","public"],
+          "order":5
+        },
+        {
+          "name": "Aranceles de Taxis y Remises",
+          "path": "/current-site",
+          "section": "other",
+          "params": { "fragment": "/objeto/objeto/index&to=6" },
+          "permissions": ["private","public"],
+          "order":6
+        },
+        {
+          "name": "Ferias y Mercados",
+          "path": "/current-site",
+          "section": "other",
+          "params": { "fragment": "/objeto/objeto/index&to=7" },
+          "permissions": ["private","public"],
+          "order":7
+        },
+        {
+          "name": "Playas de Estacionamiento",
+          "path": "/current-site",
+          "section": "other",
+          "params": { "fragment": "/objeto/objeto/index&to=8" },
+          "order":8,
+          "permissions": ["private","public"]
+        },
+        {
+          "name": "Contribución por Mejoras",
+          "path": "/current-site",
+          "section": "other",
+          "params": { "fragment": "/objeto/objeto/index&to=10" },
+          "order":9,
+          "permissions": ["private","public"]
+        },
+        {
+          "name": "Planes de Vivienda",
+          "path": "/current-site",
+          "section": "other",
+          "params": { "fragment": "/objeto/objeto/index&to=9" },
+          "order":10,
+          "permissions": ["private","public"]
+        },
+        {
+          "name": "Calcular Recargo",
+          "path": "/current-site",
+          "section": "other",
+          "params": { "fragment": "/ctacte/recargo/index" },
+          "order":11,
+          "permissions": ["private","public"]
+        },
+        {
+          "name": "Consulta de Cedulón",
+          "path": "/current-site",
+          "section": "other",
+          "params": { "fragment": "/ctacte/boleta/consultaboleta" },
+          "order":12,
+          "permissions": ["private","public"]
+        },
+        {
+          "name": "Procuración Fiscal",
+          "path": "/current-site",
+          "section": "other",
+          "params": { "fragment": "/ctacte/procuracion/index" },
+          "order":13,
+          "permissions": ["private","public"]
+        },
+        {
+          "name": "Constancia de Incripción Comercio",
+          "path": "/current-site",
+          "section": "other",
+          "params": { "fragment": "/objeto/objeto/index&to=2" },
+          "order":14,
+          "permissions": ["private","public"]
+        }
+      ]
+    },
+    {
+      "name": "Accesos con Clave",
+      "data": [
+        {
+          "name": "Declaraciones Juradas",
+          "path": "/current-site",
+          "section": "Accesos con Clave",
+          "params": { "fragment": "/objeto/objeto/index&to=2" },
+          "permissions": ["private"],
+          "order": 1
+        },
+        {
+          "name": "Agente de Retención y Percepción",
+          "path": "/current-site",
+          "section": "Accesos con Clave",
+          "params": { "fragment": "/objeto/objeto/index&to=2" },
+          "permissions": ["private"],
+          "order": 2
+        },
+        {
+          "name": "Liquidaciones Eventuales",
+          "path": "/current-site",
+          "section": "Accesos con Clave",
+          "params": { "fragment": "/objeto/objeto/index&to=2" },
+          "permissions": ["private"],
+          "order": 3
+        },
+        {
+          "name": "Deuda Carné",
+          "path": "/current-site",
+          "section": "Accesos con Clave",
+          "params": { "fragment": "/objeto/objeto/index&to=2" },
+          "permissions": ["private"],
+          "order": 4
+        },
+        {
+          "name": "Informe Notarial",
+          "path": "/current-site",
+          "section": "Accesos con Clave",
+          "params": { "fragment": "/objeto/objeto/index&to=2" },
+          "permissions": ["private"],
+          "order": 5
+        },
+        {
+          "name": "Comprobantes por Planilla",
+          "path": "/current-site",
+          "section": "Accesos con Clave",
+          "params": { "fragment": "/objeto/objeto/index&to=2" },
+          "permissions": ["private"],
+          "order": 6
+        },
+        {
+          "name": "Convenio Multilateral",
+          "path": "/current-site",
+          "section": "Accesos con Clave",
+          "params": { "fragment": "/objeto/objeto/index&to=2" },
+          "permissions": ["private"],
+          "order": 7
+        }
+      ]
+    }
+  ]
+}

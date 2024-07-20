@@ -1,0 +1,129 @@
+<div class="page-container">
+    <div class="container py-4">
+        <app-breadcrumbs [steps]="[{name:'Inicio',link:'/home'},{name:'Buscar ' + objectType,link:'/tax/search/' + objectType}]"></app-breadcrumbs>
+        <!-- Buscador -->
+        <div class="row">
+            <div class="col-sm-6 offset-sm-3">
+                <mat-card class="default-card mb-4 feature-card p-4">
+                    <mat-card-header>
+                        <mat-card-title class="title">
+                            {{objectInfo.title}}
+                        </mat-card-title>
+                        <mat-card-subtitle class="my-4">
+                            {{objectInfo.description}}
+                        </mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content class="description">
+                        <form class="custom-form" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+                            <mat-form-field class="w-100 mb-2">
+                                <mat-label>{{objectInfo.type}}</mat-label>
+                                <input type="text" matInput formControlName="id" placeholder="{{objectInfo.placeholder}}">
+                                <mat-error *ngIf="searchForm.get('id')?.hasError('invalidCuit') && !searchForm.get('id')?.hasError('required')">
+                                    Por favor ingrese un número de cuit válido
+                                </mat-error>
+                                <mat-error *ngIf="searchForm.get('id')?.hasError('invalidVehicleDomain') && !searchForm.get('id')?.hasError('required')">
+                                    El dominio ingresado es inválido
+                                </mat-error>
+                                <mat-error *ngIf="searchForm.get('id')?.hasError('invalidCadastralDesignation') && !searchForm.get('id')?.hasError('required')">
+                                    La designación catastral debe ser un número de 18 digitos
+                                </mat-error>
+                                <mat-error *ngIf="searchForm.get('id')?.hasError('invalidCementeryDesignation') && !searchForm.get('id')?.hasError('required')">
+                                    El identificador de cementerios debe ser un número de 16 digitos
+                                </mat-error>
+                                <mat-error *ngIf="searchForm.get('id')?.hasError('required')">
+                                    Este campo es <strong>obligatorio</strong>
+                                </mat-error>
+                            </mat-form-field>
+                            <div class="d-flex justify-content-between">
+                                <div class="captcha"></div>
+                                <button type="submit" [disabled]="searchForm.invalid" mat-flat-button color="primary">Enviar</button>
+                            </div>
+                        </form>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <div class="col-sm-3"></div>
+        </div>
+        <!-- Vencimientos -->
+        <div class="row">
+            <h2 class="section-title text-center my-5">Vencimientos</h2>
+            <!-- Period Container -->
+            <!-- <div class="col-12 text-center d-flex flex-row justify-content-center align-items-center">
+                <mat-icon class="light x2" aria-hidden="false" aria-label="anterior">chevron_left</mat-icon>
+                <div class="p-4">
+                    <div class="ff-maven fz-2 primary fw-bold">
+                        2/2023
+                    </div>
+                    <div>
+                        Período
+                    </div>
+                </div>
+                <mat-icon class="light x2" aria-hidden="false" aria-label="anterior">chevron_right</mat-icon>
+            </div> -->
+            <div class="col-sm-3 mb-4 mb-sm-0">
+                <mat-card class="default-card feature-card">
+                    <mat-card-header class="mb-2">
+                        <mat-card-title class="d-flex justify-content-between">
+                            <span class="ff-maven">Mediano</span>
+                            <mat-icon aria-hidden="false" class="x1_5" color="primary">photo_size_select_small</mat-icon>
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content class="x-grid">
+                        <span class="key">Presentación</span>
+                        <span class="value">10/07/2024</span>
+                        <span class="key">Vencimiento</span>
+                        <span class="value">20/07/2024</span>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <div class="col-sm-3 mb-4 mb-sm-0">
+                <mat-card class="default-card feature-card">
+                    <mat-card-header class="mb-2">
+                        <mat-card-title class="d-flex justify-content-between">
+                            <span class="ff-maven">Grande</span>
+                            <mat-icon aria-hidden="false" class="x1_5" color="primary">factory</mat-icon>
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content class="x-grid">
+                      <span class="key">Presentación</span>
+                      <span class="value">10/07/2024</span>
+                      <span class="key">Vencimiento</span>
+                      <span class="value">20/07/2024</span>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <div class="col-sm-3 mb-4 mb-sm-0">
+                <mat-card class="default-card feature-card">
+                    <mat-card-header class="mb-2">
+                        <mat-card-title class="d-flex justify-content-between">
+                            <span class="ff-maven">Interés Fiscal</span>
+                            <mat-icon aria-hidden="false" class="x1_5" color="primary">show_chart</mat-icon>
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content class="x-grid">
+                      <span class="key">Presentación</span>
+                      <span class="value">10/07/2024</span>
+                      <span class="key">Vencimiento</span>
+                      <span class="value">20/07/2024</span>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <div class="col-sm-3 mb-4 mb-sm-0">
+                <mat-card class="default-card feature-card">
+                    <mat-card-header class="mb-2">
+                        <mat-card-title class="d-flex justify-content-between">
+                            <span class="ff-maven">Agentes</span>
+                            <mat-icon aria-hidden="false" class="x1_5" color="primary">local_police</mat-icon>
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content class="x-grid">
+                        <span class="key">DDJJ y Pagos</span>
+                        <span class="value">10/07/2024</span>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+        <!-- Separator -->
+        <div class="my-5"></div>
+    </div>
+</div>

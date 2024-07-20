@@ -1,0 +1,183 @@
+<div class="page-container">
+    <div class="container">
+        <div class="row">
+            <app-breadcrumbs [steps]="[{name:'Inicio',link:'/home'}]">
+            </app-breadcrumbs>
+        </div>
+        <div class="row mb-4">
+            <div class="col-12">
+                <h3 class="sub-section-title my-4">Datos Planilla</h3>
+                <mat-card class="default-card p-4">
+                    <mat-card-content>
+                        <div class="info-grid info-grid-wide">
+                            <div>
+                                <span>Expediente Jud.</span>
+                                <span>{{objectInfo.object}}</span>
+                            </div>
+                            <div>
+                                <span>Orden</span>
+                                <span>{{objectInfo.id}}</span>
+                            </div>
+                            <div>
+                                <span>Año</span>
+                                <span>{{objectInfo.cuit}}</span>
+                            </div>
+                            <div>
+                                <span>ID</span>
+                                <span>{{objectInfo.fullName}}</span>
+                            </div>
+                            <div>
+                                <span>Objeto</span>
+                                <span>{{objectInfo.holder}}</span>
+                            </div>
+                            <div>
+                                <span>Estado</span>
+                                <span>{{objectInfo.settlementType}}</span>
+                            </div>
+                            <div>
+                                <span>Identificación</span>
+                                <span>{{objectInfo.address}}</span>
+                            </div>
+                            <div>
+                                <span>CUIT</span>
+                                <span>{{objectInfo.address}}</span>
+                            </div>
+                            <div>
+                                <span>Sorteo</span>
+                                <span>{{objectInfo.address}}</span>
+                            </div>
+                            <div>
+                                <span>Procurador</span>
+                                <span>{{objectInfo.address}}</span>
+                            </div>
+                            <div>
+                                <span>Caratula</span>
+                                <span>{{objectInfo.address}}</span>
+                            </div>
+                            <div>
+                                <span>Juzgado</span>
+                                <span>{{objectInfo.address}}</span>
+                            </div>
+
+                        </div>
+                        <div class="bg-light p-4 br-1 mt-4">
+                            <h3 class="sub-section-title section-border">Seguimiento</h3>
+                            <div class="row align-items-center">
+                                <div class="row info-grid">
+                                    <div>
+                                        <span>Alta</span>
+                                        <span>12/11/2021</span>
+                                    </div>
+                                    <div>
+                                        <span>Inicio</span>
+                                        <span>20/04/2020</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-sm-6">
+                <h3 class="sub-section-title my-4">Instancias</h3>
+                <mat-card class="default-card p-4">
+                    <mat-card-content>
+                        <table mat-table [dataSource]="lawSuiteInstancesDataSource" class="mt-4">
+                                        
+                            <!-- Table Columns -->
+                            <ng-container matColumnDef="order">
+                                <th mat-header-cell *matHeaderCellDef> Orden </th>
+                                <td mat-cell *matCellDef="let element"> {{element.order | date: 'MM/YYYY'}} </td>
+                            </ng-container>                            
+                            <ng-container matColumnDef="date">
+                                <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                                <td mat-cell *matCellDef="let element"> {{element.date | date: 'dd/MM/YYYY'}} 
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="type">
+                                <th mat-header-cell *matHeaderCellDef> Nominal </th>
+                                <td mat-cell *matCellDef="let element"> {{element.type}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="updated">
+                                <th mat-header-cell *matHeaderCellDef> Modificación </th>
+                                <td mat-cell *matCellDef="let element"> {{element.updated}} </td>
+                            </ng-container>
+                        
+                            <tr mat-header-row *matHeaderRowDef="lawSuiteInstancesDisplayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: lawSuiteInstancesDisplayedColumns;">
+                            </tr>
+                        </table>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <div class="col-sm-6 summary-section">
+                <div class="row">
+                    <div class="col-6">
+                        <h3 class="sub-section-title my-4">Resumen de Deuda</h3>
+                    </div>
+                    <div class="col-6 d-flex justify-content-end align-items-center"><button mat-raised-button
+                            color="primary">DETALLE DE DEUDA</button></div>
+                </div>
+                <mat-card class="default-card p-4">
+                    <mat-card-content>
+                        <h3 class="sub-section-title list-title">Conceptos de Deuda</h3>
+                        <mat-list role="list" class="summary-list">
+                            <mat-list-item role="listitem">
+                                <span>Nominal</span>
+                                <span>$ 1650</span>
+                            </mat-list-item>
+                            <mat-list-item role="listitem">
+                                <span>Accesor</span>
+                                <span>$ 4751</span>
+                            </mat-list-item>
+                            <mat-list-item role="listitem">
+                                <span>Multa</span>
+                                <span>$ 950</span>
+                            </mat-list-item>
+                            <mat-list-item role="listitem" class="total-item">
+                                <span>Total</span>
+                                <span>$1000</span>
+                            </mat-list-item>
+                        </mat-list>
+                        <h3 class="sub-section-title list-title mt-4">Gastos y Honorarios</h3>
+                        <mat-list role="list" class="summary-list">
+                            <mat-list-item role="listitem">
+                                <span>0 Honorario Extrajudicial</span>
+                                <span>$ 1650</span>
+                            </mat-list-item>
+                            <mat-list-item role="listitem">
+                                <span>Gasto Administrativo</span>
+                                <span>$ 4751</span>
+                            </mat-list-item>
+                            <mat-list-item role="listitem">
+                                <span>GASTO (Ley 9459 y cc)</span>
+                                <span>$ 950</span>
+                            </mat-list-item>
+                            <mat-list-item role="listitem">
+                                <span>IVA</span>
+                                <span>$ 950</span>
+                            </mat-list-item>
+                            <mat-list-item role="listitem" class="total-item">
+                                <span>Total Gastos y Honorarios</span>
+                                <span>$1000</span>
+                            </mat-list-item>
+                            <mat-list-item role="listitem" class="my-4">
+                                <span class="fw-bold black fz-1_2">Total</span>
+                                <span class="fw-bold fz-1_2">$10000</span>
+                            </mat-list-item>
+                        </mat-list>
+                        <div class="row mt-4">
+                            <div class="d-flex justify-content-evenly mt-4 mt-sm-0 d-sm-block text-end">
+                                <button mat-raised-button>GENERAR PLAN</button>
+                                <button mat-raised-button class="ms-sm-2">CEDULON</button>
+                                <button mat-raised-button color="primary" class="ms-sm-2">PAGAR</button>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+<!-- 
+  Uso del atributo [steps]:
+  - El atributo [steps] debe ser un array de objetos con las siguientes propiedades:
+    - name: Nombre del paso.
+    - link: Ruta a la que el paso debe enlazar.
+  Ejemplo de uso:
+  <app-breadcrumbs [steps]="[{name:'Inicio',link:'/home'}, {name:'Página 1',link:'/page1'}]"></app-breadcrumbs>
+-->
+<div class="my-4 d-flex">
+    <ng-container *ngFor="let item of steps; index as i" class="d-flex align-items-center">
+        <a routerLink="{{item.link}}" [ngClass]="{'medium': i == steps.length-1}">{{item.name}}</a>
+        <mat-icon *ngIf="i < steps.length - 1" aria-hidden="false" aria-label="indicador"
+            class="primary">chevron_right</mat-icon>
+    </ng-container>
+</div>

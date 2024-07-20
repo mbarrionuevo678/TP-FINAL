@@ -1,0 +1,180 @@
+.welcome-section {
+    min-height: 30vh;
+
+    h1,
+    h2 {
+        font-family: 'Maven Pro';
+        font-size: 2.5em;
+        color: var(--dark);
+
+        @media screen and (max-width: 599px) {
+            font-size: 1.5em;
+        }
+    }
+
+    h1 {
+        font-weight: normal;
+    }
+
+    h2 {
+        font-weight: bold;
+    }
+
+    .isologo-container {
+        background: url(./../../assets/imgs/rtm_light_bg.png) no-repeat;
+        img.logo {
+            width: 15em;
+            filter: invert(.5);
+        }
+    }
+
+}
+
+.shortcuts-section {
+    ::ng-deep mat-card.default-card:hover {
+        box-shadow: 0 0 12px rgba(0, 123, 255, 0.5) !important;
+    }
+    .feature-card {
+        .icon {
+            width: 50px;
+            height: 50px;
+            font-size: 2.5em;
+            display: block;
+        }
+
+        .title {
+            font-family: 'Maven Pro';
+            font-size: bold;
+        }
+
+        .description {
+            font-size: 0.9em;
+            color: var(--medium)
+        }
+    }
+
+    .expanded-buttons-section {
+        background: none;
+        box-shadow: none;
+
+        ::ng-deep .mat-expansion-panel-header {
+            justify-content: center;
+            align-items: center;
+
+            .mat-content {
+                flex: none;
+
+                .mat-expansion-panel-header-title {
+                    font-family: 'Maven Pro';
+                    color: var(--primary);
+                    font-size: 1.3em;
+                }
+            }
+        }
+
+        ::ng-deep .mat-expansion-panel-body {
+            padding: 0;
+        }
+    }
+
+    .buttons-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        column-gap: 1em;
+
+        @media screen and (max-width: 599px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .button-item {
+            background: white;
+            border-left: 7px solid var(--primary);
+            border-radius: 5px;
+            padding: 1em;
+            margin-bottom: 1em;
+            min-height: 5em;
+            display: flex;
+            align-items: center;
+
+            h3 {
+                font-family: 'Maven Pro';
+                font-size: 1.3em;
+                font-weight: bold;
+                margin: 0;
+            }
+        }
+    }
+}
+
+.expirations-section {
+    background: white;
+
+    .expiration-slider {
+        max-width: 800px;
+
+        &::part(button-prev),
+        &::part(button-next) {
+            color: var(--medium);
+            transform: scale(.5, .5);
+        }
+
+        swiper-slide {
+            .date {
+                line-height: normal;
+                border-right: 1px dotted var(--light);
+
+                p {
+                    margin: 0;
+                    font-family: 'Maven Pro';
+                }
+
+                .day {
+                    font-size: 4em;
+                    color: var(--primary);
+                }
+
+                .month {
+                    font-size: 1em;
+                    color: var(--primary);
+                    text-transform: uppercase;
+                }
+
+                .type {
+                    color: var(--dark);
+                }
+
+            }
+
+            &:last-child {
+                .date {
+                    border-right: none;
+                }
+            }
+        }
+    }
+
+}
+
+.payment-section {
+    .credit-card {
+        background: white;
+        border-radius: 10px;
+
+        .text {
+            font-family: 'Maven Pro';
+            font-size: 1.2em;
+            color: var(--dark);
+            font-weight: 500;
+        }
+    }
+
+    .other-methods {
+        border-radius: 10px;
+        border: 5px solid var(--light);
+
+        img {
+            margin: .3em;
+            object-fit: none;
+        }
+    }
+}

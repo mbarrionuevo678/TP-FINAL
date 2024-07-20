@@ -1,0 +1,34 @@
+footer {
+    background-color: var(--ultradark);
+    width: 100%;
+    //position: absolute;
+    bottom: 0;
+    color: var(--light);
+
+    .logo {
+        max-width: 60%;
+        opacity: .8;
+    }
+
+    p.summary {
+        color: var(--medium);
+        font-size: .9em;
+    }
+
+    ul {
+        list-style: none;
+
+        li {
+            color: var(--medium);
+            margin-bottom: 0.5em;
+        }
+
+        li.title {
+            font-weight: bold;
+            font-family: 'Maven Pro';
+            font-size: 1.2em;
+            color: var(--light);
+        }
+    }
+
+}

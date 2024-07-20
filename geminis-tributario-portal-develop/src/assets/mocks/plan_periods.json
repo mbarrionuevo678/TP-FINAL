@@ -1,0 +1,60 @@
+{
+  "status": {
+    "messages": [],
+    "success": true
+  },
+  "data": {
+    "periods":[
+        {
+            "id": 1,
+            "period": 1702480795728,
+            "expiration": 1755127999999,
+            "nominal": 25000,
+            "recharge": 2000,
+            "penalty": 1000,
+            "total": 26500,
+            "reference": 1568789
+        },
+        {
+            "id": 2,
+            "period": 1755130000000,
+            "expiration": 1807765199999,
+            "nominal": 25000,
+            "recharge": 2000,
+            "penalty": 800,
+            "total": 27300,
+            "reference": 1568790
+        },
+        {
+            "id": 3,
+            "period": 1807765200000,
+            "expiration": 1860402399999,
+            "nominal": 25000,
+            "recharge": 2500,
+            "penalty": 1200,
+            "total": 26300,
+            "reference": 1568791
+        },
+        {
+            "id": 4,
+            "period": 1860402400000,
+            "expiration": 1913039599999,
+            "nominal": 25000,
+            "recharge": 3000,
+            "penalty": 1500,
+            "total": 27000,
+            "reference": 1568792
+        },
+        {
+            "id": 5,
+            "period": 1913040000000,
+            "expiration": 1965676799999,
+            "nominal": 25000,
+            "recharge": 3500,
+            "penalty": 1800,
+            "total": 27500,
+            "reference": 1568793
+        }
+    ]
+  }
+}

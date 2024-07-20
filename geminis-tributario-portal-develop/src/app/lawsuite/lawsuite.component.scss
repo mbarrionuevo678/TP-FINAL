@@ -1,0 +1,24 @@
+::ng-deep .summary-list {
+    width: 100%;
+    .mat-mdc-list-item {
+        height: 2em;
+        padding: 0;
+        .mdc-list-item__primary-text {
+            display: flex;
+            justify-content: space-between;
+            span:first-child {
+                color: var(--medium)
+            }
+        }
+        &.total-item {
+            border-top: 1px solid var(--light);
+            margin-top: .5em;
+        }
+    }
+}
+.summary-section {
+    .list-title {
+        color: var(--medium);
+        font-size: 1.2em;
+    }
+}

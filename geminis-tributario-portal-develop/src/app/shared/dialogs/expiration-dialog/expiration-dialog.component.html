@@ -1,0 +1,22 @@
+<h2 mat-dialog-title class="mb-2">Calendario de Vencimientos</h2>
+<mat-dialog-content class="mat-typography">
+  <div class="container">
+    <div *ngFor="let expiration of expirations" class="expiration-container">
+      <div class="date">
+        <div class="day">
+          {{expiration.date | date: 'dd'}}
+        </div>
+        <div class="month"> 
+          {{expiration.date | date: 'LLLL' | uppercase}}
+        </div>
+      </div>
+      <div class="taxes">
+        <div *ngFor="let item of expiration.taxes">{{item}}</div>
+      </div>
+    </div>    
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cerrar</button>
+  <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button> -->
+</mat-dialog-actions>

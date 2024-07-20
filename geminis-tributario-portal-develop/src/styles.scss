@@ -1,0 +1,339 @@
+// Boostrap files only for layout purpose
+// Using the following guide: 
+// https: //www.amadousall.com/the-best-parts-of-bootstrap-you-are-missing-in-angular-material/
+
+@import "assets/themes/variables";
+
+// Import functions, variables, and mixins needed by other Bootstrap files
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
+// Import Bootstrap Reboot
+@import "bootstrap/scss/variables-dark.scss";
+@import "bootstrap/scss/maps"; // Contains :root CSS variables used by other Bootstrap files
+@import "bootstrap/scss/root"; // Contains :root CSS variables used by other Bootstrap files
+@import "bootstrap/scss/reboot";
+
+@import "bootstrap/scss/containers"; // Add .container and .container-fluid classes
+@import "bootstrap/scss/grid"; // Add the grid system
+@import "bootstrap/scss/badge"; // Add Badges
+@import "bootstrap/scss/helpers";
+
+@import "bootstrap/scss/utilities"; // Configures the utility classes that should be generated
+@import "bootstrap/scss/utilities/api"; // Generates the actual utility classes
+
+@import "assets/themes/reset";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400;500;700;900&display=swap');
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined");
+
+// Bootstrap customization
+
+.text-bg-danger {
+  background-color: var(--danger)!important;
+}
+.text-bg-success {
+  background-color: var(--success)!important;
+}
+
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+h1,h2,h3 {
+  font-family: 'Maven Pro';
+}
+//TODO: This has to be dynamic calc()
+.page-container {
+  //@extend .container;
+  min-height: 70vh;
+}
+.container {
+  max-width: 1200px;
+}
+.pointer {
+  cursor: pointer;
+}
+
+// Utilities
+
+// Text Colors
+.mat-icon.mat-white {
+  color: var(--white);
+}
+.white {
+  color: var(--white);
+}
+.primary {
+  color: var(--primary);
+}
+.light {
+  color: var(--light);
+}
+.ultralight {
+  color: var(--ultralight);
+}
+.medium {
+  color: var(--medium);
+}
+.dark {
+  color: var(--dark);
+}
+.superdark {
+  color: var(--superdark);
+}
+
+// Backgrounds
+.bg-primary {
+  background: var(--primary);
+}
+.bg-white {
+  background: var(--white);
+}
+.bg-medium {
+  background: var(--medium);
+}
+.bg-superdark {
+  background: var(--superdark);
+}
+
+//Responsive
+.mobile-hide {
+  @media screen and (max-width: 599px) {
+    display: none!important;
+  }
+}
+.desktop-hide {
+  @media screen and (min-width: 599px) {
+    display: none!important;
+  }
+}
+
+// Size
+.x1_5 {
+  transform: scale(1.5);
+}
+.x2 {
+  transform: scale(2);
+}
+
+// Font Family
+.ff-maven {
+  font-family: 'Maven Pro'
+}
+.ff-roboto {
+  font-family: 'Roboto'
+}
+
+// Font Size
+.fz-small {
+  font-size: .9em;
+}
+.fz-xsmall {
+  font-size: .8em;
+}
+.fz-1 {
+  font-size: 1em;
+}
+.fz-1_1 {
+  font-size: 1.1em;
+}
+.fz-1_2 {
+  font-size: 1.2em;
+}
+.fz-1_3 {
+  font-size: 1.3em;
+}
+.fz-2 {
+  font-size: 2em;
+}
+.fz-3 {
+  font-size: 3em;
+}
+.fz-4 {
+  font-size: 4em;
+}
+
+// Font Weight
+.fw-regular {
+  font-weight: 400;
+}
+.fw-medium {
+  font-weight: 500;
+}
+.fw-bold {
+  font-weight: 700;
+}
+.fw-black {
+  font-weight: 900;
+}
+
+// Border Radius default
+.br-1 {
+  border-radius: 10px;
+}
+.br-2 {
+  border-radius: 20px;
+}
+
+// Grids
+ .x-grid {
+   display: grid!important;
+   grid-template-columns: 1fr 2fr;
+   column-gap: 1em;
+
+   span.key {
+     color: var(--medium);
+   }
+
+   span.value {
+    color: var(--superdark);
+   }
+ }
+
+ .y-grid {
+   display: grid!important;
+   grid-template-columns: 1fr;
+   row-gap: 0.25em;
+      span.key {
+          color: var(--medium);
+        }
+      
+        span.value {
+          color: var(--superdark);
+        }
+ }
+ .info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  column-gap: 1em;
+  row-gap: 1em;
+  & > div {
+      display: flex;
+      flex-direction: column;
+      span:first-child {
+          color: var(--medium);
+      }
+      span:last-child {
+          color: var(--superdark);
+      }
+  }
+  &.info-grid-wide {
+    column-gap: 2em;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+  @media screen and (max-width: 599px) {
+    column-gap: .5em!important;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr))!important;
+  }
+}
+
+// Layout
+.center-x {
+  display: flex;
+  justify-content: center;
+}
+.center-y {
+  display: flex;
+  align-items: center;
+}
+.center-xy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+//All content background is defined in this container
+.mat-sidenav-content {
+  background: var(--ultralight);
+}
+mat-card.default-card {
+  box-shadow: 0 0 8px rgba($color: #000000, $alpha: 0.2)!important;
+  border-radius: 10px!important;
+}
+.default-card-style {
+  box-shadow: 0 0 8px rgba($color: #000000, $alpha: 0.2) !important;
+  border-radius: 10px !important;
+}
+h2.section-title {
+  color: var(--dark);
+  font-weight: bold;
+  font-size: 2em;
+  &.border {
+    border-left: 3px solid var(--primary);
+    padding-left: .5em;
+  }
+}
+h3.sub-section-title {
+  color: var(--dark);
+  font-weight: bold;
+  font-size: 1.5em;
+
+  &.section-border {
+    border-left: 3px solid var(--primary)!important;
+    padding-left: .5em;
+  }
+}
+
+// Elements
+
+.chip {
+  padding: .2em 1em;
+  text-transform: uppercase;
+  border-radius: 10px;
+  font-family: 'Roboto';
+  font-size: .8em;
+  background: var(--medium);
+  margin-left: .5em;
+  color: white;
+    &.success {
+      background: var(--success);
+    }
+    &.danger {
+      background: var(--danger);
+    }
+}
+
+.separator {
+  border-top: 1px solid var(--light)
+}
+
+.spinner-overlay {
+  height: 100%;
+  position: fixed;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,.5);
+  z-index: 10000;
+}
+
+// Notifications
+
+.mat-mdc-snack-bar-container {
+
+  &.app-notification-error {
+    //--mdc-snackbar-container-color: #f23a2f;
+    .mdc-button__label {
+      color: red
+    }
+  }
+
+  &.app-notification-success {
+    //--mdc-snackbar-container-color: #43a446;
+    .mdc-button__label {
+      color: green
+    }
+  }
+}
+

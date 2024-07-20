@@ -1,0 +1,10 @@
+{
+  "status": {
+    "messages": [],
+    "success": false
+  },
+  "data": {
+    "rspId": 1,
+    "rspDescripcion": "Error al obtener las credenciales"
+  }
+}

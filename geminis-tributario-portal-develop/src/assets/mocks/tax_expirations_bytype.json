@@ -1,0 +1,92 @@
+[
+    {
+        "id":1,
+        "date": "1703041200000",
+        "taxes":["Automotor","Inmobiliario"]
+    },
+    {
+        "id":2,
+        "type": "Inmobiliario",
+        "expiration": "1519211809934"
+    },
+    {
+        "id":4,
+        "type": "Automotor",
+        "expiration": "1705719600000"
+    }, 
+    {
+        "id":5,
+        "type": "Inmobiliario",
+        "expiration": "1705719600000"
+    },
+    {
+        "id":6,
+        "type": "Inmobiliario",
+        "expiration": "1708398000000"
+    }
+]
+
+
+{
+    "id":3,
+    "type": "Com. e Industria",
+    "expiration": "1705719600000",
+    "data": [
+        {
+            "name": "Mediano",
+            "icon": "close",
+            "items": [
+                {
+                    "title":"Presentación",
+                    "date":"1519211809934"
+                },
+                {
+                    "title":"Vencimiento",
+                    "date":"1519211809934"
+                }
+            ]
+        },
+        {
+            "name": "Grande",
+            "icon": "close",
+            "items": [
+                {
+                    "title":"Presentación",
+                    "date":"1519211809934"
+                },
+                {
+                    "title":"Vencimiento",
+                    "date":"1519211809934"
+                }
+            ]
+        },
+        {
+            "name": "Interés Fiscal",
+            "icon": "close",
+            "items": [
+                {
+                    "title":"Presentación",
+                    "date":"1519211809934"
+                },
+                {
+                    "title":"Vencimiento",
+                    "date":"1519211809934"
+                }
+            ]
+        },
+        {
+            "name": "Agentes",
+            "icon": "close",
+            "items": [
+                {
+                    "title":"Presentación",
+                    "date":"1519211809934"
+                },
+                {
+                    "title":"Vencimiento",
+                    "date":"1519211809934"
+                }
+            ]
+        }
+    ]
+},         

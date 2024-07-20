@@ -1,0 +1,49 @@
+{
+  "status": {
+    "messages": [],
+    "success": true
+  },
+  "data": {
+    "id": 123,
+    "judicial_file": 456,
+    "order": 789,
+    "year": 2023,
+    "object": "Fake lawsuit",
+    "status": "Pending",
+    "identification": "ABC123",
+    "cuit": 987654321,
+    "assignment": "Assigned",
+    "attorney": "John Doe",
+    "caption": "District Court",
+    "court": "Courtroom 1",
+    "created_date": 1519211809934,
+    "start_date": 1519211809934,
+    "debt_nominal": 1500,
+    "debt_accessor": 500,
+    "debt_penalty": 1000,
+    "debt_total": 2500,
+    "instances": [
+      {
+        "id": 123,
+        "order": 789,
+        "date": 456,
+        "type": 123,
+        "updated": 1519211809934
+      },
+      {
+        "id": 124,
+        "order": 789,
+        "date": 456,
+        "type": 123,
+        "updated": 1519211809934
+      },
+      {
+        "id": 125,
+        "order": 789,
+        "date": 456,
+        "type": 123,
+        "updated": 1519211809934
+      }
+    ]
+  }
+}

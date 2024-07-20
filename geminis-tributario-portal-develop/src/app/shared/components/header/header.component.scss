@@ -1,0 +1,32 @@
+.mat-toolbar {
+    border-top: 10px solid var(--primary);
+    .spacer {
+            flex: 1 1 auto;
+        }
+    .login-text {
+        font-size: .8em;
+        color: var(--dark);
+        font-weight: 400;
+    }
+    @media screen and (max-width: 599px) {
+        height: 3.5em;
+        img {
+                width: 60px;
+            }
+    }
+    
+}
+.call-message {
+    font-family: 'Maven Pro';
+    font-weight: 400;
+    font-size: .8em;
+}
+.title-container {
+
+    p {
+        font-family: 'Maven Pro';
+        font-weight: 700;
+        font-size: 1.2em;
+        color: var(--dark);
+    }
+}

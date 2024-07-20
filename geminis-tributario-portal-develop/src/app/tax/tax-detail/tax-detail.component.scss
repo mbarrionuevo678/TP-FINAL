@@ -1,0 +1,21 @@
+.item-description {
+    font-size: 1.3em;
+    font-weight: bold;
+    font-family: 'Maven Pro';
+}
+mat-expansion-panel {
+    //min-height: 4em;
+    // padding-top: 1em!important;
+    // padding-bottom: 1em!important;
+}
+::ng-deep.mat-expansion-panel-body {
+    padding: 0!important;
+}
+::ng-deep.mat-mdc-list-option {
+    background: var(--light);
+    min-height: 4.5em!important;
+    border-bottom: 1px dotted var(--medium);
+}
+::ng-deep.mat-mdc-selection-list {
+    padding: 0;
+}

@@ -1,0 +1,9 @@
+a {
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 400;
+    &:hover {
+        color: var(--primary);
+        text-decoration: underline;
+    }
+}

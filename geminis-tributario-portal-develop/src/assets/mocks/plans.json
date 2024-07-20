@@ -1,0 +1,52 @@
+[
+    {
+        "id": 1,
+        "title":"Ponete al día 2023 (cuotas)",
+        "createdAt": "1519211809934",
+        "installments":12,
+        "capital":"1254",
+        "accessor":"123456",
+        "status":"D",
+        "total":"1232345"
+    },
+    {
+        "id": 1,
+        "title": "Ponete al día 2023 (cuotas)",
+        "createdAt": "1519211809934",
+        "installments": 12,
+        "capital": "1254",
+        "accessor": "123456",
+        "status":"A",
+        "total": "1232345"
+    },
+    {
+      "id": 1,
+      "title": "Ponete al día 2023 (cuotas)",
+      "createdAt": "1519211809934",
+      "installments": 12,
+      "capital": "1254",
+      "accessor": "123456",
+      "status":"A",
+      "total": "1232345"
+    },
+    {
+      "id": 1,
+      "title": "Ponete al día 2023 (cuotas)",
+      "createdAt": "1519211809934",
+      "installments": 12,
+      "capital": "1254",
+      "accessor": "123456",
+      "status":"A",
+      "total": "1232345"
+    },
+    {
+      "id": 1,
+      "title": "Ponete al día 2023 (cuotas)",
+      "createdAt": "1519211809934",
+      "installments": 12,
+      "capital": "1254",
+      "accessor": "123456",
+      "status":"A",
+      "total": "1232345"
+    }
+]
