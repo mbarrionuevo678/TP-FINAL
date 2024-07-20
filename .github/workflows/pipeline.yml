@@ -1,87 +1,45 @@
-name: CI/CD Pipeline for PIN-FINAL Project
+name: CI/CD Pipeline
 
-on:
-  push:
-  #  branches:
-#      - main
-#  pull_request:
-#    branches:
- #     - main
-  workflow_dispatch:
+on: [push]
 
 jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code 🛒
+      - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Set up AWS CLI ⚙️
+      - name: Configurar AWS CLI
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-
-      - name: Run create_ec2.sh 🖥️
+      - name: Crear EC2
         run: |
           chmod +x create_ec2.sh
           ./create_ec2.sh
 
   deploy:
-    needs: setup
     runs-on: ubuntu-latest
+    needs: setup
     steps:
-      - name: Checkout code 🛒
+      - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Set up AWS CLI ⚙️
+      - name: Configurar AWS CLI
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-
-      - name: Run create_eks.sh ☸️
+      - name: Crear EKS
         run: |
           chmod +x create_eks.sh
           ./create_eks.sh
-
-      - name: Run deploy_nginx.sh 🌐
+      - name: Desplegar NGINX
         run: |
           chmod +x deploy_nginx.sh
           ./deploy_nginx.sh
-
-      - name: Run deploy_project.sh 🚀
+      - name: Desplegar Proyecto
         run: |
           chmod +x deploy_project.sh
           ./deploy_project.sh
-
-  monitor:
-    needs: deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code 🛒
-        uses: actions/checkout@v2
-
-      - name: Set up AWS CLI ⚙️
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
-      - name: Run install_ebs_csi.sh 🛠️
-        run: |
-          chmod +x install_ebs_csi.sh
-          ./install_ebs_csi.sh
-
-      - name: Run deploy_monitoring.sh 📊
-        run: |
-          chmod +x deploy_monitoring.sh
-          ./deploy_monitoring.sh
-
-      - name: Run configure_ebs.sh 🔧
-        run: |
-          chmod +x configure_ebs.sh
-          ./configure_ebs.sh
