@@ -1,11 +1,17 @@
 #!/bin/bash
 
+# Variables
+AMI_ID="ami-04a81a99f5ec58529"
+INSTANCE_TYPE="t2.micro"
+KEY_NAME="pin"
+SECURITY_GROUP="allow_ssh_http"
+TAG_NAME="pin"
+
+# Crear instancia EC2
 aws ec2 run-instances \
-    --image-id ami-0a91cd140a1fc148a \
-    --count 1 \
-    --instance-type t2.micro \
-    --key-name pin \
-    --security-group-ids <your-security-group-id> \
-    --subnet-id <your-subnet-id> \
-    --user-data file://user_data.sh \
-    --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=PIN-FINAL-EC2}]'
+    --image-id $AMI_ID \
+    --instance-type $INSTANCE_TYPE \
+    --key-name $KEY_NAME \
+    --security-groups $SECURITY_GROUP \
+    --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value='$TAG_NAME'}]' \
+    --user-data file://ec2_user_data.sh

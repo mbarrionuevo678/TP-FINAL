@@ -1,16 +1,14 @@
-name: Proyecto Integrador DevOps
+name: CI/CD Pipeline
 
-on:
+on: 
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 
 jobs:
   setup:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -30,6 +28,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: setup
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -45,12 +44,31 @@ jobs:
         run: |
           chmod +x ./create_eks.sh
           ./create_eks.sh
+
+      - name: Deploy NGINX
+        run: |
           chmod +x ./deploy_nginx.sh
           ./deploy_nginx.sh
+
+      - name: Install EBS CSI driver
+        run: |
+          chmod +x ./install_ebs_csi.sh
+          ./install_ebs_csi.sh
+
+      - name: Configure EBS
+        run: |
+          chmod +x ./configure_ebs.sh
+          ./configure_ebs.sh
+
+      - name: Deploy project
+        run: |
+          chmod +x ./deploy_project.sh
+          ./deploy_project.sh
 
   monitor:
     runs-on: ubuntu-latest
     needs: deploy
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -62,17 +80,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Install EBS CSI Driver
-        run: |
-          chmod +x ./install_ebs_csi.sh
-          ./install_ebs_csi.sh
-
-      - name: Deploy Monitoring Tools
+      - name: Deploy monitoring
         run: |
           chmod +x ./deploy_monitoring.sh
           ./deploy_monitoring.sh
-
-      - name: Configure EBS
-        run: |
-          chmod +x ./configure_ebs.sh
-          ./configure_ebs.sh
