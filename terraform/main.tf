@@ -3,13 +3,22 @@ provider "aws" {
 }
 
 module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
-  name   = "eks-vpc"
-  cidr   = "10.0.0.0/16"
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "2.77.0"
 
-  azs             = ["us-east-2a", "us-east-2b", "us-east-2c"]
+  name = "eks-vpc"
+  cidr = "10.0.0.0/16"
+
+  azs             = ["us-east-1a", "us-east-1b", "us-east-1c"]
   public_subnets  = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
   private_subnets = ["10.0.10.0/24", "10.0.11.0/24", "10.0.12.0/24"]
+
+  enable_nat_gateway = true
+  single_nat_gateway = true
+
+  tags = {
+    Name = "eks-vpc"
+  }
 }
 
 module "eks" {
@@ -29,18 +38,65 @@ module "eks" {
     }
   }
 
-  # Enable EBS CSI Driver
   manage_aws_auth = true
-  map_roles = [
-    {
-      rolearn  = "arn:aws:iam::${var.aws_account_id}:role/eks-cluster-role"
-      username = "system:node:{{EC2PrivateDNSName}}"
-      groups   = ["system:bootstrappers", "system:nodes"]
-    },
-  ]
 
   tags = {
     Environment = "dev"
     Terraform   = "true"
   }
+}
+
+resource "aws_iam_role" "eks_role" {
+  name = "eks-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "eks.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      },
+    ]
+  })
+
+  tags = {
+    Name = "eks-role"
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "eks_policy_attachment" {
+  role       = aws_iam_role.eks_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+}
+
+resource "aws_iam_role_policy_attachment" "eks_service_policy_attachment" {
+  role       = aws_iam_role.eks_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
+}
+
+output "vpc_id" {
+  value = module.vpc.vpc_id
+}
+
+output "subnets" {
+  value = module.vpc.public_subnets
+}
+
+output "cluster_id" {
+  value = module.eks.cluster_id
+}
+
+output "cluster_endpoint" {
+  value = module.eks.cluster_endpoint
+}
+
+output "cluster_security_group_id" {
+  value = module.eks.cluster_security_group_id
+}
+
+output "node_security_group_id" {
+  value = module.eks.node_security_group_id
 }

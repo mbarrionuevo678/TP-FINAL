@@ -16,7 +16,12 @@ project-root/
 │ ├── outputs.tf
 │ ├── security_groups.tf
 │ ├── eks_cluster.tf
-│ └── ebs_csi_driver.tf
+│ ├── ebs_csi_driver.tf
+│ ├── iam.tf
+│ ├── iam_instance_profile.tf
+│ ├── ec2.tf
+│ ├── terraform-policy.json
+│ ├── ec2_user_data.sh
 ├── k8s/
 │ ├── prometheus/
 │ │ ├── prometheus-deployment.yaml
@@ -59,8 +64,6 @@ Editar terraform/variables.tf con tu región y ID de cuenta de AWS.
 3. Ejecutar Terraform
 Iniciar y aplicar Terraform para configurar la infraestructura:
 
-sh
-
 cd terraform
 terraform init
 terraform apply -auto-approve
@@ -81,6 +84,10 @@ outputs.tf: Define las salidas de los scripts de Terraform.
 security_groups.tf: Configura los grupos de seguridad.
 eks_cluster.tf: Configura el clúster EKS.
 ebs_csi_driver.tf: Configura el controlador CSI de EBS.
+iam.tf: Configura los roles IAM necesarios.
+iam_instance_profile.tf: Configura el perfil de instancia IAM.
+ec2.tf: Configura la instancia EC2.
+terraform-policy.json: Define la política IAM para Terraform.
 Kubernetes
 prometheus/: Contiene los archivos de configuración de Prometheus.
 prometheus-deployment.yaml: Configura el despliegue de Prometheus.
@@ -105,3 +112,8 @@ Ejecutar Docker Compose para desplegar la aplicación.
 Instalar kubectl.
 Crear volúmenes persistentes y claims en Kubernetes.
 Desplegar Prometheus, Grafana y Nginx en el clúster EKS.
+
+Notas Finales
+Asegúrate de reemplazar <YOUR_EBS_VOLUME_ID> en los archivos de configuración de volúmenes persistentes con los IDs de tus volúmenes EBS.
+Verifica que los permisos de IAM estén correctamente configurados para permitir la creación y gestión de los recursos necesarios.
+Utiliza la pestaña "Actions" en GitHub para monitorear y revisar la ejecución de tu pipeline.
