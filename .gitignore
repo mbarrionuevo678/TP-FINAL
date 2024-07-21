@@ -1,0 +1,42 @@
+# Terraform files
+*.tfstate
+*.tfstate.backup
+.terraform/
+terraform.tfvars
+terraform.tfplan
+
+# Credenciales y claves de acceso
+*.pem
+*.key
+
+# Archivos de configuración local
+*.env
+config/
+
+# Archivos de log
+*.log
+
+# Archivos de directorio y sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de compilación
+*.out
+*.class
+*.pyc
+*.o
+*.so
+
+# Archivos temporales y de swap
+*.swp
+*.tmp
+
+# Archivos de depuración
+debug.log
+
+# Archivos específicos de IDEs
+.vscode/
+.idea/
+
+# Archivos de CI
+.tfplan
