@@ -1,1 +1,32 @@
-.terraform
+# Terraform files
+*.tfstate
+*.tfstate.backup
+
+# Crash log files
+crash.log
+
+# Exclude .terraform directory
+.terraform/
+
+# Exclude .terraform.lock.hcl file
+.terraform.lock.hcl
+
+# Exclude local environment override files
+terraform.tfvars
+*.tfvars.json
+
+# Exclude sensitive files (make sure to add your own)
+*.pem
+*.key
+*.p12
+*.cer
+*.csr
+*.crt
+*.der
+
+# Exclude plan files
+*.plan
+
+# Exclude other potentially sensitive information
+*.kubeconfig
+*.conf
