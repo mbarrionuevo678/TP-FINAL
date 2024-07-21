@@ -17,3 +17,9 @@ variable "ebs_volume_size" {
   description = "Size of the EBS volume in GB"
   default     = 10
 }
+
+variable "aws_account_id" {
+  description = "The AWS account ID"
+  default     = "471112727282"
+}
+
