@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: grafana-pv
+  name: prometheus-pv
 spec:
   capacity:
     storage: 10Gi
   accessModes:
     - ReadWriteOnce
   awsElasticBlockStore:
-    volumeID: <YOUR-EBS-VOLUME-ID>
+    volumeID: <EBS_VOLUME_PROMETHEUS_ID>
     fsType: ext4

@@ -1,68 +1,67 @@
-name: CI/CD Pipeline 🚀
+name: 🚀 Deploy to AWS
 
 on:
-  workflow_dispatch: # Para ejecución manual
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code 📥
-        uses: actions/checkout@v2
+    - name: 🛎️ Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Configure AWS credentials 🔐
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+    - name: 🌍 Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.1.0
 
-      - name: Install dependencies 🛠️
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y jq
-          curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/v0.118.0/eksctl_Linux_amd64.tar.gz" --output eksctl.tar.gz
-          tar xzvf eksctl.tar.gz
-          sudo mv eksctl /usr/local/bin
-          rm eksctl.tar.gz
+    - name: 🔑 Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
 
-      - name: Create or Update Network 🌐
-        run: |
-          chmod +x scripts/create_network.sh
-          ./scripts/create_network.sh
+    - name: 🏗️ Terraform Init
+      run: terraform init
 
-      - name: Create or Update EKS Cluster 🌐
-        run: |
-          chmod +x scripts/create_eks.sh
-          ./scripts/create_eks.sh
+    - name: 🚜 Terraform Apply
+      run: terraform apply -auto-approve
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: Configure kubectl 🛠️
-        run: |
-          chmod +x scripts/configure_kubectl.sh
-          ./scripts/configure_kubectl.sh
+    - name: 📦 Install Helm
+      run: |
+        curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
-      - name: Install EBS CSI Driver 💾
-        run: |
-          chmod +x scripts/install_ebs_csi.sh
-          ./scripts/install_ebs_csi.sh
+    - name: 📥 Add Helm repositories
+      run: |
+        helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+        helm repo add grafana https://grafana.github.io/helm-charts
+        helm repo update
 
-      - name: Configure EBS 🛠️
-        run: |
-          chmod +x scripts/configure_ebs.sh
-          ./scripts/configure_ebs.sh
+    - name: 📈 Deploy Prometheus
+      run: |
+        kubectl apply -f manifests/persistent_volume_prometheus.yaml
+        kubectl apply -f manifests/persistent_volume_claim_prometheus.yaml
+        helm install prometheus prometheus-community/prometheus
 
-      - name: Deploy NGINX 📦
-        run: |
-          chmod +x scripts/deploy_nginx.sh
-          ./scripts/deploy_nginx.sh
+    - name: 📊 Deploy Grafana
+      run: |
+        kubectl apply -f manifests/persistent_volume_grafana.yaml
+        kubectl apply -f manifests/persistent_volume_claim_grafana.yaml
+        helm install grafana grafana/grafana
+        kubectl get svc --namespace default -w grafana
 
-      - name: Deploy Web App 🌐
-        run: |
-          chmod +x scripts/deploy_apps.sh
-          ./scripts/deploy_apps.sh
+    - name: 🌐 Deploy Nginx
+      run: |
+        kubectl apply -f manifests/persistent_volume_nginx.yaml
+        kubectl apply -f manifests/persistent_volume_claim_nginx.yaml
+        kubectl apply -f manifests/nginx-deployment.yaml
+        kubectl apply -f manifests/nginx-service.yaml
 
-      - name: Deploy Prometheus and Grafana 📊
-        run: |
-          chmod +x scripts/prometheus-grafana-deployment.sh
-          ./scripts/prometheus-grafana-deployment.sh
+    - name: 🚛 Install EBS CSI Driver
+      run: |
+        kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/ecr/?ref=release-1.3"
