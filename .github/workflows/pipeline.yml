@@ -37,10 +37,10 @@ jobs:
           chmod +x scripts/create_eks.sh
           ./scripts/create_eks.sh
 
-      - name: Create or Update EC2 Instance 💻
+      - name: Configure kubectl 🛠️
         run: |
-          chmod +x scripts/create_ec2.sh
-          ./scripts/create_ec2.sh
+          chmod +x scripts/configure_kubectl.sh
+          ./scripts/configure_kubectl.sh
 
       - name: Install EBS CSI Driver 💾
         run: |
