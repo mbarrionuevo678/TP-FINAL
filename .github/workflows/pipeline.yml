@@ -18,16 +18,18 @@ jobs:
 
     - name: 🌍 Terraform Init
       run: terraform init
+      working-directory: ./terraform
 
     - name: 📋 Terraform Plan
       id: plan
       run: terraform plan -out=tfplan
-      continue-on-error: true
+      working-directory: ./terraform
 
     - name: 🚀 Terraform Apply
-      if: steps.plan.outcome == 'success' && steps.plan.outputs.planned == 'true'
+      if: steps.plan.outcome == 'success'
       id: apply
       run: terraform apply -auto-approve tfplan
+      working-directory: ./terraform
 
     - name: 🎉 Felicitaciones 🎉
       if: success()
@@ -51,22 +53,25 @@ jobs:
       run: aws eks update-kubeconfig --name my-cluster
 
     - name: 📊 Deploy Grafana
-      run: kubectl apply -f manifests/persistent_volume_grafana.yaml
-      run: kubectl apply -f manifests/persistent_volume_claim_grafana.yaml
-      run: kubectl apply -f manifests/grafana-deployment.yaml
-      run: kubectl apply -f manifests/grafana-service.yaml
+      run: |
+        kubectl apply -f manifests/persistent_volume_grafana.yaml
+        kubectl apply -f manifests/persistent_volume_claim_grafana.yaml
+        kubectl apply -f manifests/grafana-deployment.yaml
+        kubectl apply -f manifests/grafana-service.yaml
 
     - name: 📈 Deploy Prometheus
-      run: kubectl apply -f manifests/persistent_volume_prometheus.yaml
-      run: kubectl apply -f manifests/persistent_volume_claim_prometheus.yaml
-      run: kubectl apply -f manifests/prometheus-deployment.yaml
-      run: kubectl apply -f manifests/prometheus-service.yaml
+      run: |
+        kubectl apply -f manifests/persistent_volume_prometheus.yaml
+        kubectl apply -f manifests/persistent_volume_claim_prometheus.yaml
+        kubectl apply -f manifests/prometheus-deployment.yaml
+        kubectl apply -f manifests/prometheus-service.yaml
 
     - name: 🌐 Deploy NGINX
-      run: kubectl apply -f manifests/persistent_volume_nginx.yaml
-      run: kubectl apply -f manifests/persistent_volume_claim_nginx.yaml
-      run: kubectl apply -f manifests/nginx-deployment.yaml
-      run: kubectl apply -f manifests/nginx-service.yaml
+      run: |
+        kubectl apply -f manifests/persistent_volume_nginx.yaml
+        kubectl apply -f manifests/persistent_volume_claim_nginx.yaml
+        kubectl apply -f manifests/nginx-deployment.yaml
+        kubectl apply -f manifests/nginx-service.yaml
 
     - name: 🔍 Verify Deployment
       run: |
@@ -77,4 +82,4 @@ jobs:
       if: success()
       run: |
         echo "¡Felicitaciones! Las aplicaciones se han desplegado correctamente."
-        echo "Puedes acceder a NGINX en la siguiente URL: http://$(kubectl get svc nginx-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')"
+        echo "Puedes acceder a NGINX en la siguiente URL: http://$(kubectl get svc nginx-service -o jsonpath='{.status.loadBalancer.ingress[0].
