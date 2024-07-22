@@ -1,10 +1,42 @@
-name: 🚀 Deploy Application 🌐
+name: 🚀 Deploy Infrastructure and Applications 🌐
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
+  deploy-infrastructure:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 🛠️ Checkout code
+      uses: actions/checkout@v2
+
+    - name: 🏗️ Set up Terraform
+      uses: hashicorp/setup-terraform@v1
+
+    - name: 🌍 Terraform Init
+      run: terraform init
+      working-directory: ./terraform
+
+    - name: 📋 Terraform Plan
+      id: plan
+      run: terraform plan -out=tfplan
+      working-directory: ./terraform
+
+    - name: 🚀 Terraform Apply
+      if: steps.plan.outcome == 'success'
+      id: apply
+      run: terraform apply -auto-approve tfplan
+      working-directory: ./terraform
+
+    - name: 🎉 Felicitaciones 🎉
+      if: success()
+      run: echo "¡Felicitaciones! La infraestructura se ha desplegado correctamente."
+
   deploy-applications:
+    needs: deploy-infrastructure
     runs-on: ubuntu-latest
 
     steps:
@@ -17,60 +49,37 @@ jobs:
         chmod +x kubectl
         sudo mv kubectl /usr/local/bin/
 
-    - name: Configure kubectl
-      env:
-        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ${{ secrets.AWS_REGION }}
-      run: |
-        echo "${KUBE_CONFIG_DATA}" | base64 --decode > kubeconfig.yaml
-        kubectl config view --kubeconfig=kubeconfig.yaml
+    - name: 📄 Get Kubeconfig
+      run: aws eks update-kubeconfig --name DevOpsGroup7 --region us-east-1
 
-    - name: Install EBS CSI Driver
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ${{ secrets.AWS_REGION }}
+    - name: 📊 Deploy Grafana
       run: |
-        kubectl apply -f manifests/ebs-csi-driver.yaml --kubeconfig=kubeconfig.yaml
+        kubectl apply -f manifests/persistent_volume_grafana.yaml
+        kubectl apply -f manifests/persistent_volume_claim_grafana.yaml
+        kubectl apply -f manifests/grafana-deployment.yaml
+        kubectl apply -f manifests/grafana-service.yaml
 
-    - name: Debug kubeconfig
+    - name: 📈 Deploy Prometheus
       run: |
-        cat kubeconfig.yaml
+        kubectl apply -f manifests/persistent_volume_prometheus.yaml
+        kubectl apply -f manifests/persistent_volume_claim_prometheus.yaml
+        kubectl apply -f manifests/prometheus-deployment.yaml
+        kubectl apply -f manifests/prometheus-service.yaml
 
-    - name: Verify connectivity
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ${{ secrets.AWS_REGION }}
+    - name: 🌐 Deploy NGINX
       run: |
-        kubectl get nodes --kubeconfig=kubeconfig.yaml
+        kubectl apply -f manifests/persistent_volume_nginx.yaml
+        kubectl apply -f manifests/persistent_volume_claim_nginx.yaml
+        kubectl apply -f manifests/nginx-deployment.yaml
+        kubectl apply -f manifests/nginx-service.yaml
 
-    - name: Build and push Docker image
-      env:
-        DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-        DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+    - name: 🔍 Verify Deployment
       run: |
-        docker build -t ${DOCKER_HUB_USERNAME}/my-docker-image:latest .
-        echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
-        docker push ${DOCKER_HUB_USERNAME}/my-docker-image:latest
+        kubectl get pods
+        kubectl get services
 
-    - name: Create namespace if not exists
+    - name: 🎉 Felicitaciones 🎉
+      if: success()
       run: |
-        kubectl create namespace my-namespace || true
-
-    - name: Deploy to Kubernetes
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ${{ secrets.AWS_REGION }}
-      run: |
-        kubectl apply -f manifests/persistent_volume_grafana.yaml --kubeconfig=kubeconfig.yaml
-        kubectl apply -f manifests/persistent_volume_claim_grafana.yaml --kubeconfig=kubeconfig.yaml
-        kubectl apply -f manifests/persistent_volume_prometheus.yaml --kubeconfig=kubeconfig.yaml
-        kubectl apply -f manifests/persistent_volume_claim_prometheus.yaml --kubeconfig=kubeconfig.yaml
-        kubectl apply -f manifests/persistent_volume_nginx.yaml --kubeconfig=kubeconfig.yaml
-        kubectl apply -f manifests/persistent_volume_claim_nginx.yaml --kubeconfig=kubeconfig.yaml
-        kubectl apply -f manifests/nginx-deployment.yaml --kubeconfig=kubeconfig.yaml
-        kubectl apply -f manifests/nginx-service.yaml --kubeconfig=kubeconfig.yaml
+        echo "¡Felicitaciones! Las aplicaciones se han desplegado correctamente."
+        echo "Puedes acceder a NGINX en la siguiente URL: http://$(kubectl get svc nginx-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')"
