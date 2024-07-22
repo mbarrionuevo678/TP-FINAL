@@ -1,9 +1,7 @@
 name: 🚀 Deploy Applications 🌐
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   deploy-applications:
@@ -22,31 +20,34 @@ jobs:
     - name: 📄 Get Kubeconfig
       run: aws eks update-kubeconfig --name DevOpsGroup7 --region us-east-1
 
-    - name: Install EBS CSI Driver
-      run: |
-        kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/ecr/?ref=release-1.5"
-
-    - name: Install Helm
+    - name: 🔧 Install Helm
       run: |
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 
-    - name: Add Helm Repos
+    - name: 📦 Install EBS CSI Driver
       run: |
-        helm repo add grafana https://grafana.github.io/helm-charts
-        helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-        helm repo update
+        kubectl apply -f manifests/ebs-csi-driver.yaml
 
-    - name: Deploy Grafana
+    - name: 📊 Deploy Grafana
       run: |
         kubectl apply -f manifests/persistent_volume_grafana.yaml
         kubectl apply -f manifests/persistent_volume_claim_grafana.yaml
-        helm install grafana grafana/grafana --set persistence.enabled=true --set persistence.existingClaim=grafana-pvc
+        helm repo add grafana https://grafana.github.io/helm-charts
+        helm repo update
+        helm install grafana grafana/grafana --namespace monitoring --create-namespace \
+          --set persistence.enabled=true \
+          --set persistence.existingClaim=grafana-pvc \
+          --set service.type=LoadBalancer
 
-    - name: Deploy Prometheus
+    - name: 📈 Deploy Prometheus
       run: |
         kubectl apply -f manifests/persistent_volume_prometheus.yaml
         kubectl apply -f manifests/persistent_volume_claim_prometheus.yaml
-        helm install prometheus prometheus-community/prometheus --set server.persistentVolume.existingClaim=prometheus-pvc
+        helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+        helm repo update
+        helm install prometheus prometheus-community/prometheus --namespace monitoring --create-namespace \
+          --set server.persistentVolume.existingClaim=prometheus-pvc \
+          --set server.service.type=LoadBalancer
 
     - name: 🌐 Deploy NGINX
       run: |
