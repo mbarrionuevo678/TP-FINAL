@@ -1,12 +1,10 @@
 apiVersion: v1
-kind: PersistentVolume
+kind: PersistentVolumeClaim
 metadata:
-  name: nginx-pv
+  name: nginx-pvc
 spec:
-  capacity:
-    storage: 10Gi
   accessModes:
     - ReadWriteOnce
-  awsElasticBlockStore:
-    volumeID: <EBS_VOLUME_NGINX_ID>
-    fsType: ext4
+  resources:
+    requests:
+      storage: 10Gi
