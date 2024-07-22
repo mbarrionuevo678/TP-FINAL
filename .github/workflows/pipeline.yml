@@ -52,19 +52,31 @@ jobs:
     - name: 📄 Get Kubeconfig
       run: aws eks update-kubeconfig --name DevOpsGroup7 --region us-east-1
 
-    - name: 📊 Deploy Grafana
+    - name: Install EBS CSI Driver
+      run: |
+        kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/ecr/?ref=release-1.5"
+
+    - name: Install Helm
+      run: |
+        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+    - name: Add Helm Repos
+      run: |
+        helm repo add grafana https://grafana.github.io/helm-charts
+        helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+        helm repo update
+
+    - name: Deploy Grafana
       run: |
         kubectl apply -f manifests/persistent_volume_grafana.yaml
         kubectl apply -f manifests/persistent_volume_claim_grafana.yaml
-        kubectl apply -f manifests/grafana-deployment.yaml
-        kubectl apply -f manifests/grafana-service.yaml
+        helm install grafana grafana/grafana --set persistence.enabled=true --set persistence.existingClaim=grafana-pvc
 
-    - name: 📈 Deploy Prometheus
+    - name: Deploy Prometheus
       run: |
         kubectl apply -f manifests/persistent_volume_prometheus.yaml
         kubectl apply -f manifests/persistent_volume_claim_prometheus.yaml
-        kubectl apply -f manifests/prometheus-deployment.yaml
-        kubectl apply -f manifests/prometheus-service.yaml
+        helm install prometheus prometheus-community/prometheus --set server.persistentVolume.existingClaim=prometheus-pvc
 
     - name: 🌐 Deploy NGINX
       run: |
