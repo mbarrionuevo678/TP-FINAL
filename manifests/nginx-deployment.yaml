@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:1.14.2
+        image: ${{ secrets.DOCKER_HUB_USERNAME }}/my-web-app:latest
         ports:
         - containerPort: 80
         volumeMounts:
