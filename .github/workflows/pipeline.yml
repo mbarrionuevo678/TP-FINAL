@@ -1,52 +1,10 @@
-name: 🚀 Deploy Infrastructure and Applications 🌐
+name: 🚀 Deploy Application 🌐
 
 on:
   workflow_dispatch:
 
 jobs:
-  deploy-infrastructure:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: 🛠️ Checkout code
-      uses: actions/checkout@v2
-
-    - name: 🏗️ Set up Terraform
-      uses: hashicorp/setup-terraform@v1
-
-    - name: 🌍 Terraform Init
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ${{ secrets.AWS_REGION }}
-      run: terraform init
-      working-directory: ./terraform
-
-    - name: 📋 Terraform Plan
-      id: plan
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ${{ secrets.AWS_REGION }}
-      run: terraform plan -out=tfplan
-      working-directory: ./terraform
-
-    - name: 🚀 Terraform Apply
-      if: steps.plan.outcome == 'success'
-      id: apply
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ${{ secrets.AWS_REGION }}
-      run: terraform apply -auto-approve tfplan
-      working-directory: ./terraform
-
-    - name: 🎉 Felicitaciones 🎉
-      if: success()
-      run: echo "¡Felicitaciones! La infraestructura se ha desplegado correctamente."
-
   deploy-applications:
-    needs: deploy-infrastructure
     runs-on: ubuntu-latest
 
     steps:
@@ -59,41 +17,34 @@ jobs:
         chmod +x kubectl
         sudo mv kubectl /usr/local/bin/
 
-    - name: 📄 Get Kubeconfig
+    - name: Configure kubectl
       env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ${{ secrets.AWS_REGION }}
-      run: aws eks update-kubeconfig --name DevOpsGroup7
-
-    - name: 📊 Deploy Grafana
+        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
       run: |
-        kubectl apply -f manifests/persistent_volume_grafana.yaml
-        kubectl apply -f manifests/persistent_volume_claim_grafana.yaml
-        kubectl apply -f manifests/grafana-deployment.yaml
-        kubectl apply -f manifests/grafana-service.yaml
+        echo "${KUBE_CONFIG_DATA}" | base64 --decode > kubeconfig.yaml
+        kubectl config view --kubeconfig=kubeconfig.yaml
 
-    - name: 📈 Deploy Prometheus
+    - name: Debug kubeconfig
       run: |
-        kubectl apply -f manifests/persistent_volume_prometheus.yaml
-        kubectl apply -f manifests/persistent_volume_claim_prometheus.yaml
-        kubectl apply -f manifests/prometheus-deployment.yaml
-        kubectl apply -f manifests/prometheus-service.yaml
+        cat kubeconfig.yaml
 
-    - name: 🌐 Deploy NGINX
+    - name: Verify connectivity
       run: |
-        kubectl apply -f manifests/persistent_volume_nginx.yaml
-        kubectl apply -f manifests/persistent_volume_claim_nginx.yaml
-        kubectl apply -f manifests/nginx-deployment.yaml
-        kubectl apply -f manifests/nginx-service.yaml
+        kubectl get nodes --kubeconfig=kubeconfig.yaml
 
-    - name: 🔍 Verify Deployment
+    - name: Build and push Docker image
+      env:
+        DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+        DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
       run: |
-        kubectl get pods
-        kubectl get services
+        docker build -t my-docker-image:latest .
+        echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+        docker push my-docker-image:latest
 
-    - name: 🎉 Felicitaciones 🎉
-      if: success()
+    - name: Create namespace if not exists
       run: |
-        echo "¡Felicitaciones! Las aplicaciones se han desplegado correctamente."
-        echo "Puedes acceder a NGINX en la siguiente URL: http://$(kubectl get svc nginx-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')"
+        kubectl create namespace my-namespace || true
+
+    - name: Deploy to Kubernetes
+      run: |
+        kubectl apply -f deployment.yaml --namespace=my-namespace --kubeconfig=kubeconfig.yaml
