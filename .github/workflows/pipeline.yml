@@ -15,17 +15,29 @@ jobs:
       uses: hashicorp/setup-terraform@v1
 
     - name: 🌍 Terraform Init
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
       run: terraform init
       working-directory: ./terraform
 
     - name: 📋 Terraform Plan
       id: plan
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
       run: terraform plan -out=tfplan
       working-directory: ./terraform
 
     - name: 🚀 Terraform Apply
       if: steps.plan.outcome == 'success'
       id: apply
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
       run: terraform apply -auto-approve tfplan
       working-directory: ./terraform
 
@@ -48,6 +60,10 @@ jobs:
         sudo mv kubectl /usr/local/bin/
 
     - name: 📄 Get Kubeconfig
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
       run: aws eks update-kubeconfig --name my-cluster
 
     - name: 📊 Deploy Grafana
