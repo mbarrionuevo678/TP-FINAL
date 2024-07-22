@@ -1,9 +1,7 @@
 name: 🚀 Deploy Infrastructure and Applications 🌐
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   deploy-infrastructure:
@@ -82,4 +80,4 @@ jobs:
       if: success()
       run: |
         echo "¡Felicitaciones! Las aplicaciones se han desplegado correctamente."
-        echo "Puedes acceder a NGINX en la siguiente URL: http://$(kubectl get svc nginx-service -o jsonpath='{.status.loadBalancer.ingress[0].
+        echo "Puedes acceder a NGINX en la siguiente URL: http://$(kubectl get svc nginx-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')"
