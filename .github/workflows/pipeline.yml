@@ -1,4 +1,4 @@
-name: 🚀 Deploy Infrastructure and Applications 🌐
+name: 🚀 Deploy Applications 🌐
 
 on:
   push:
@@ -6,37 +6,7 @@ on:
       - main
 
 jobs:
-  deploy-infrastructure:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: 🛠️ Checkout code
-      uses: actions/checkout@v2
-
-    - name: 🏗️ Set up Terraform
-      uses: hashicorp/setup-terraform@v1
-
-    - name: 🌍 Terraform Init
-      run: terraform init
-      working-directory: ./terraform
-
-    - name: 📋 Terraform Plan
-      id: plan
-      run: terraform plan -out=tfplan
-      working-directory: ./terraform
-
-    - name: 🚀 Terraform Apply
-      if: steps.plan.outcome == 'success'
-      id: apply
-      run: terraform apply -auto-approve tfplan
-      working-directory: ./terraform
-
-    - name: 🎉 Felicitaciones 🎉
-      if: success()
-      run: echo "¡Felicitaciones! La infraestructura se ha desplegado correctamente."
-
   deploy-applications:
-    needs: deploy-infrastructure
     runs-on: ubuntu-latest
 
     steps:
