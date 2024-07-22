@@ -20,15 +20,30 @@ jobs:
     - name: Configure kubectl
       env:
         KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
       run: |
         echo "${KUBE_CONFIG_DATA}" | base64 --decode > kubeconfig.yaml
         kubectl config view --kubeconfig=kubeconfig.yaml
+
+    - name: Install EBS CSI Driver
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+      run: |
+        kubectl apply -f manifests/ebs-csi-driver.yaml --kubeconfig=kubeconfig.yaml
 
     - name: Debug kubeconfig
       run: |
         cat kubeconfig.yaml
 
     - name: Verify connectivity
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
       run: |
         kubectl get nodes --kubeconfig=kubeconfig.yaml
 
@@ -46,5 +61,16 @@ jobs:
         kubectl create namespace my-namespace || true
 
     - name: Deploy to Kubernetes
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
       run: |
-        kubectl apply -f deployment.yaml --namespace=my-namespace --kubeconfig=kubeconfig.yaml
+        kubectl apply -f manifests/persistent_volume_grafana.yaml --kubeconfig=kubeconfig.yaml
+        kubectl apply -f manifests/persistent_volume_claim_grafana.yaml --kubeconfig=kubeconfig.yaml
+        kubectl apply -f manifests/persistent_volume_prometheus.yaml --kubeconfig=kubeconfig.yaml
+        kubectl apply -f manifests/persistent_volume_claim_prometheus.yaml --kubeconfig=kubeconfig.yaml
+        kubectl apply -f manifests/persistent_volume_nginx.yaml --kubeconfig=kubeconfig.yaml
+        kubectl apply -f manifests/persistent_volume_claim_nginx.yaml --kubeconfig=kubeconfig.yaml
+        kubectl apply -f manifests/nginx-deployment.yaml --kubeconfig=kubeconfig.yaml
+        kubectl apply -f manifests/nginx-service.yaml --kubeconfig=kubeconfig.yaml
