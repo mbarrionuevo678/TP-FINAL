@@ -1,0 +1,35 @@
+name: 🚀 Destroy Infrastructure 🌍
+
+on:
+  workflow_dispatch:
+
+jobs:
+  destroy-infrastructure:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 🛠️ Checkout code
+      uses: actions/checkout@v2
+
+    - name: 🏗️ Set up Terraform
+      uses: hashicorp/setup-terraform@v1
+
+    - name: 🌍 Terraform Init
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+      run: terraform init
+      working-directory: ./terraform
+
+    - name: ⚠️ Terraform Destroy
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+      run: terraform destroy -auto-approve
+      working-directory: ./terraform
+
+    - name: 🎉 Infraestructura eliminada 🎉
+      if: success()
+      run: echo "¡Felicitaciones! La infraestructura se ha eliminado correctamente."
