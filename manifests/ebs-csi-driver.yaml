@@ -1,0 +1,137 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ebs-csi-controller-sa
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ebs-csi-controller-cluster-role
+rules:
+  - apiGroups: [""]
+    resources: ["persistentvolumes"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["get", "list", "watch", "update"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["csidrivers"]
+    verbs: ["create", "delete"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["csinodes"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["coordination.k8s.io"]
+    resources: ["leases"]
+    verbs: ["get", "list", "watch", "create", "update", "delete"]
+  - apiGroups: ["snapshot.storage.k8s.io"]
+    resources: ["volumesnapshots"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  - apiGroups: ["snapshot.storage.k8s.io"]
+    resources: ["volumesnapshotcontents"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  - apiGroups: ["snapshot.storage.k8s.io"]
+    resources: ["volumesnapshotclasses"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: ebs-csi-controller-role-binding
+subjects:
+  - kind: ServiceAccount
+    name: ebs-csi-controller-sa
+    namespace: kube-system
+roleRef:
+  kind: ClusterRole
+  name: ebs-csi-controller-cluster-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ebs-csi-controller
+  namespace: kube-system
+spec:
+  serviceName: "ebs-csi-controller"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ebs-csi-controller
+  template:
+    metadata:
+      labels:
+        app: ebs-csi-controller
+    spec:
+      serviceAccountName: ebs-csi-controller-sa
+      containers:
+      - name: ebs-plugin
+        image: amazon/aws-ebs-csi-driver:latest
+        args:
+        - "--v=5"
+        - "--csi-address=$(ADDRESS)"
+        - "--leader-election"
+        env:
+        - name: ADDRESS
+          value: /csi/csi.sock
+        volumeMounts:
+        - mountPath: /csi
+          name: plugin-dir
+        - mountPath: /var/lib/kubelet/plugins/kubernetes.io/csi/pv
+          name: podvol
+          mountPropagation: "Bidirectional"
+        securityContext:
+          privileged: true
+      volumes:
+        - name: plugin-dir
+          emptyDir: {}
+        - name: podvol
+          hostPath:
+            path: /var/lib/kubelet/plugins/kubernetes.io/csi/pv
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: ebs-csi-node
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      app: ebs-csi-node
+  template:
+    metadata:
+      labels:
+        app: ebs-csi-node
+    spec:
+      serviceAccountName: ebs-csi-controller-sa
+      containers:
+      - name: ebs-plugin
+        image: amazon/aws-ebs-csi-driver:latest
+        args:
+        - "--v=5"
+        - "--csi-address=$(ADDRESS)"
+        - "--nodeid=$(NODE_ID)"
+        env:
+        - name: ADDRESS
+          value: /csi/csi.sock
+        - name: NODE_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        volumeMounts:
+        - mountPath: /csi
+          name: plugin-dir
+        - mountPath: /var/lib/kubelet/plugins/kubernetes.io/csi/pv
+          name: podvol
+          mountPropagation: "Bidirectional"
+        securityContext:
+          privileged: true
+      volumes:
+        - name: plugin-dir
+          emptyDir: {}
+        - name: podvol
+          hostPath:
+            path: /var/lib/kubelet/plugins/kubernetes.io/csi/pv
